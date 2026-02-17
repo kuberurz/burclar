@@ -149,7 +149,7 @@ export default function App() {
     setActiveResultTab("daily");
     setLuckData(generateLuck());
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -180,7 +180,7 @@ Mistik, içten ve ilham verici bir dil kullan. Markdown kullanma.`
     setActiveResultTab("weekly");
     setLoading(true);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -205,7 +205,7 @@ Mistik, içten ve ilham verici bir dil kullan. Markdown kullanma.`
     setCompatText("");
     setCompatLoading(true);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -228,7 +228,7 @@ Mistik, içten ve ilham verici bir dil kullan. Markdown kullanma.`
     setYesNoLoading(true);
     setYesNoResult(null);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -267,7 +267,7 @@ Mistik, içten ve ilham verici bir dil kullan. Markdown kullanma.`
     setRisingReading("");
     setRisingLoading(true);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
