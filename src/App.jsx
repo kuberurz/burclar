@@ -1,18 +1,18 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const SIGNS = [
-  { name: "Koç", en: "Aries", symbol: "♈", dates: "21 Mar – 19 Nis", element: "Ateş", stone: "Kırmızı Akik", stoneEmoji: "🔴" },
-  { name: "Boğa", en: "Taurus", symbol: "♉", dates: "20 Nis – 20 May", element: "Toprak", stone: "Zümrüt", stoneEmoji: "💚" },
-  { name: "İkizler", en: "Gemini", symbol: "♊", dates: "21 May – 20 Haz", element: "Hava", stone: "Akvamarin", stoneEmoji: "🔵" },
-  { name: "Yengeç", en: "Cancer", symbol: "♋", dates: "21 Haz – 22 Tem", element: "Su", stone: "İnci", stoneEmoji: "⚪" },
-  { name: "Aslan", en: "Leo", symbol: "♌", dates: "23 Tem – 22 Ağu", element: "Ateş", stone: "Altın Topaz", stoneEmoji: "🟡" },
-  { name: "Başak", en: "Virgo", symbol: "♍", dates: "23 Ağu – 22 Eyl", element: "Toprak", stone: "Yeşim", stoneEmoji: "💚" },
-  { name: "Terazi", en: "Libra", symbol: "♎", dates: "23 Eyl – 22 Eki", element: "Hava", stone: "Opal", stoneEmoji: "🌈" },
-  { name: "Akrep", en: "Scorpio", symbol: "♏", dates: "23 Eki – 21 Kas", element: "Su", stone: "Obsidyen", stoneEmoji: "⚫" },
-  { name: "Yay", en: "Sagittarius", symbol: "♐", dates: "22 Kas – 21 Ara", element: "Ateş", stone: "Turkuaz", stoneEmoji: "🩵" },
-  { name: "Oğlak", en: "Capricorn", symbol: "♑", dates: "22 Ara – 19 Oca", element: "Toprak", stone: "Oniks", stoneEmoji: "🖤" },
-  { name: "Kova", en: "Aquarius", symbol: "♒", dates: "20 Oca – 18 Şub", element: "Hava", stone: "Ametist", stoneEmoji: "💜" },
-  { name: "Balık", en: "Pisces", symbol: "♓", dates: "19 Şub – 20 Mar", element: "Su", stone: "Aytaşı", stoneEmoji: "🔮" },
+  { name: "Koç", en: "Aries", symbol: "♈", dates: "21 Mar – 19 Nis", element: "Ateş", stone: "Kırmızı Akik", stoneEmoji: "🔴", color: "#C0392B" },
+  { name: "Boğa", en: "Taurus", symbol: "♉", dates: "20 Nis – 20 May", element: "Toprak", stone: "Zümrüt", stoneEmoji: "💚", color: "#27AE60" },
+  { name: "İkizler", en: "Gemini", symbol: "♊", dates: "21 May – 20 Haz", element: "Hava", stone: "Akvamarin", stoneEmoji: "🔵", color: "#2980B9" },
+  { name: "Yengeç", en: "Cancer", symbol: "♋", dates: "21 Haz – 22 Tem", element: "Su", stone: "İnci", stoneEmoji: "⚪", color: "#8E44AD" },
+  { name: "Aslan", en: "Leo", symbol: "♌", dates: "23 Tem – 22 Ağu", element: "Ateş", stone: "Altın Topaz", stoneEmoji: "🟡", color: "#D4A017" },
+  { name: "Başak", en: "Virgo", symbol: "♍", dates: "23 Ağu – 22 Eyl", element: "Toprak", stone: "Yeşim", stoneEmoji: "💚", color: "#16A085" },
+  { name: "Terazi", en: "Libra", symbol: "♎", dates: "23 Eyl – 22 Eki", element: "Hava", stone: "Opal", stoneEmoji: "🌈", color: "#E91E63" },
+  { name: "Akrep", en: "Scorpio", symbol: "♏", dates: "23 Eki – 21 Kas", element: "Su", stone: "Obsidyen", stoneEmoji: "⚫", color: "#6C3483" },
+  { name: "Yay", en: "Sagittarius", symbol: "♐", dates: "22 Kas – 21 Ara", element: "Ateş", stone: "Turkuaz", stoneEmoji: "🩵", color: "#E67E22" },
+  { name: "Oğlak", en: "Capricorn", symbol: "♑", dates: "22 Ara – 19 Oca", element: "Toprak", stone: "Oniks", stoneEmoji: "🖤", color: "#566573" },
+  { name: "Kova", en: "Aquarius", symbol: "♒", dates: "20 Oca – 18 Şub", element: "Hava", stone: "Ametist", stoneEmoji: "💜", color: "#1ABC9C" },
+  { name: "Balık", en: "Pisces", symbol: "♓", dates: "19 Şub – 20 Mar", element: "Su", stone: "Aytaşı", stoneEmoji: "🔮", color: "#5DADE2" },
 ];
 
 const LUCK_COLORS = [
@@ -24,89 +24,115 @@ const LUCK_COLORS = [
 
 const DAILY = {
   "Koç": [
-    `🌟 Genel Enerji\nBugün Mars'ın güçlü etkisiyle içinizdeki ateş her zamankinden daha parlak yanıyor. Yeni başlangıçlar için mükemmel bir gün; ertelediklerinizi hayata geçirme vakti geldi. Cesaretiniz sizi doğru yere götürecek.\n\n❤️ Aşk & İlişkiler\nPartneriyle geçirilen kaliteli zaman bugün çok değerli. Duygularınızı açıkça ifade etmekten çekinmeyin; karşınızdaki bunu bekliyor olabilir.\n\n💼 Kariyer & Para\nİş hayatında öne çıkma fırsatı doğuyor. Fikirlerinizi paylaşın, sessiz kalmak size yaramaz. Mali konularda aceleci kararlardan kaçının.\n\n🌿 Sağlık & Enerji\nFiziksel enerji yüksek ama stresi yönetmeye dikkat edin. Kısa bir yürüyüş zihninizi tazeleyecek.\n\n🔮 Günün Mesajı\nCesaretin içinde zaten var — sadece kullanmayı seç.`,
-    `🌟 Genel Enerji\nYıldızlar bugün sizi aktif ve dinamik bir güne yönlendiriyor. Önünüze çıkan fırsatları değerlendirin, tereddüt etmeyin. Ateş enerjiniz zirveye ulaşmak üzere.\n\n❤️ Aşk & İlişkiler\nSevdiklerinizle ara açılmışsa bugün köprü kurma zamanı. Küçük bir jest bile büyük fark yaratabilir.\n\n💼 Kariyer & Para\nYeni bir proje veya iş birliği kapıda olabilir. Gelen teklifleri dikkatlice değerlendirin.\n\n🌿 Sağlık & Enerji\nEnerjiniz yüksek; bu gücü yaratıcı bir aktiviteye yönlendirin.\n\n🔮 Günün Mesajı\nHarekete geçmek için doğru zaman hep şimdiki andır.`,
+    `🌟 Genel Enerji\nBugün Mars'ın güçlü etkisiyle içinizdeki ateş her zamankinden daha parlak yanıyor. Yeni başlangıçlar için mükemmel bir gün; ertelediklerinizi hayata geçirme vakti geldi.\n\n❤️ Aşk & İlişkiler\nPartneriyle geçirilen kaliteli zaman bugün çok değerli. Duygularınızı açıkça ifade etmekten çekinmeyin.\n\n💼 Kariyer & Para\nİş hayatında öne çıkma fırsatı doğuyor. Mali konularda aceleci kararlardan kaçının.\n\n🌿 Sağlık & Enerji\nFiziksel enerji yüksek ama stresi yönetmeye dikkat edin.\n\n🔮 Günün Mesajı\nCesaretin içinde zaten var — sadece kullanmayı seç.`,
+    `🌟 Genel Enerji\nYıldızlar bugün sizi aktif ve dinamik bir güne yönlendiriyor. Önünüze çıkan fırsatları değerlendirin.\n\n❤️ Aşk & İlişkiler\nSevdiklerinizle ara açılmışsa bugün köprü kurma zamanı.\n\n💼 Kariyer & Para\nYeni bir proje kapıda olabilir. Gelen teklifleri dikkatlice değerlendirin.\n\n🌿 Sağlık & Enerji\nEnerjinizi yaratıcı bir aktiviteye yönlendirin.\n\n🔮 Günün Mesajı\nHarekete geçmek için doğru zaman hep şimdiki andır.`,
   ],
   "Boğa": [
-    `🌟 Genel Enerji\nVenüs'ün rehberliğinde bugün konfor ve güzelliğe yöneliyor ruhunuz. Sabırlı adımlarla ilerlemeye devam edin; acele eden saatçi saati bozar. Güvenilirliğiniz bugün size büyük avantaj sağlıyor.\n\n❤️ Aşk & İlişkiler\nDerin ve kalıcı bağlar kurma konusunda yeteneğiniz bugün parılıyor. İlişkinizi beslemek için küçük sürprizler yapın.\n\n💼 Kariyer & Para\nMaddi konularda dikkatli ama umut verici bir gün. Uzun vadeli yatırımlar için değerlendirme yapın.\n\n🌿 Sağlık & Enerji\nDoğayla iç içe geçirilen zaman ruhunuzu besleyecek. Beslenmenize özen gösterin.\n\n🔮 Günün Mesajı\nSabır; en güzel meyvelerin olgunlaşması için zamana ihtiyaç duyduğunu unutma.`,
-    `🌟 Genel Enerji\nBugün toprak enerjisi sizi sakinleştiriyor ve odaklanmanıza yardımcı oluyor. Pratik adımlar atın, hayallerinizi somutlaştırın.\n\n❤️ Aşk & İlişkiler\nSevdiklerinize güven verin; bu onlar için en değerli hediyedir.\n\n💼 Kariyer & Para\nEmeklerinizin karşılığını almaya başlıyorsunuz. Sabırla yürüdüğünüz yol meyvelerini veriyor.\n\n🌿 Sağlık & Enerji\nZihninizi dinlendirmek için sessizliğe çekilin, meditasyon deneyin.\n\n🔮 Günün Mesajı\nKökleriniz ne kadar derinse, yükseliş o kadar güçlü olur.`,
+    `🌟 Genel Enerji\nVenüs'ün rehberliğinde bugün konfor ve güzelliğe yöneliyor ruhunuz. Sabırlı adımlarla ilerlemeye devam edin.\n\n❤️ Aşk & İlişkiler\nDerin ve kalıcı bağlar kurma konusunda yeteneğiniz bugün parılıyor.\n\n💼 Kariyer & Para\nMaddi konularda dikkatli ama umut verici bir gün.\n\n🌿 Sağlık & Enerji\nDoğayla iç içe geçirilen zaman ruhunuzu besleyecek.\n\n🔮 Günün Mesajı\nSabır; en güzel meyvelerin olgunlaşması için zamana ihtiyaç duyduğunu unutma.`,
+    `🌟 Genel Enerji\nBugün toprak enerjisi sizi sakinleştiriyor. Pratik adımlar atın, hayallerinizi somutlaştırın.\n\n❤️ Aşk & İlişkiler\nSevdiklerinize güven verin; bu onlar için en değerli hediyedir.\n\n💼 Kariyer & Para\nEmeklerinizin karşılığını almaya başlıyorsunuz.\n\n🌿 Sağlık & Enerji\nZihninizi dinlendirmek için sessizliğe çekilin.\n\n🔮 Günün Mesajı\nKökleriniz ne kadar derinse, yükseliş o kadar güçlü olur.`,
   ],
   "İkizler": [
-    `🌟 Genel Enerji\nMerkür'ün etkisiyle zihniniz bugün pırıl pırıl. Yeni fikirler peş peşe geliyor; bunları not etmeyi unutmayın. Sosyal enerjiniz zirveye yakın, iletişim kapılarını açık tutun.\n\n❤️ Aşk & İlişkiler\nSözlerinizin gücünü kullanın; içtenlikle söylenen birkaç cümle ilişkinizi dönüştürebilir.\n\n💼 Kariyer & Para\nYaratıcı fikirleriniz takdir görüyor. Ağınızı genişletmek için harika bir gün.\n\n🌿 Sağlık & Enerji\nZihninizi dinlendirin; çok fazla düşünmek yorgunluğa yol açabilir.\n\n🔮 Günün Mesajı\nİki yol göründüğünde, ikisini de denemekten korkmayan sensin.`,
-    `🌟 Genel Enerji\nBugün merakınız sizi heyecan verici yerlere götürüyor. Öğrenmek, keşfetmek ve paylaşmak için ideal bir gün.\n\n❤️ Aşk & İlişkiler\nEğlenceli bir enerji var çevrenizde; sevdiğinizle güzel anlar yaratın.\n\n💼 Kariyer & Para\nÇoklu görevlerde başarılı olduğunuzu kanıtlama fırsatınız var.\n\n🌿 Sağlık & Enerji\nNefes egzersizleri zihninizi sakinleştirecek.\n\n🔮 Günün Mesajı\nMerak, hayatın en güzel pusulasıdır.`,
+    `🌟 Genel Enerji\nMerkür'ün etkisiyle zihniniz bugün pırıl pırıl. Yeni fikirler peş peşe geliyor.\n\n❤️ Aşk & İlişkiler\nSözlerinizin gücünü kullanın; içtenlikle söylenen birkaç cümle ilişkinizi dönüştürebilir.\n\n💼 Kariyer & Para\nYaratıcı fikirleriniz takdir görüyor.\n\n🌿 Sağlık & Enerji\nZihninizi dinlendirin; çok fazla düşünmek yorgunluğa yol açabilir.\n\n🔮 Günün Mesajı\nİki yol göründüğünde, ikisini de denemekten korkmayan sensin.`,
+    `🌟 Genel Enerji\nBugün merakınız sizi heyecan verici yerlere götürüyor.\n\n❤️ Aşk & İlişkiler\nEğlenceli bir enerji var çevrenizde; sevdiğinizle güzel anlar yaratın.\n\n💼 Kariyer & Para\nÇoklu görevlerde başarılı olduğunuzu kanıtlama fırsatınız var.\n\n🌿 Sağlık & Enerji\nNefes egzersizleri zihninizi sakinleştirecek.\n\n🔮 Günün Mesajı\nMerak, hayatın en güzel pusulasıdır.`,
   ],
   "Yengeç": [
-    `🌟 Genel Enerji\nAy'ın çocuğu olarak bugün duygusal derinliğiniz bir güç kaynağına dönüşüyor. Sezgilerinize güvenin; içinizden gelen ses sizi yanıltmaz. Yuvanız ve sevdikleriniz bugün her şeyden önemli.\n\n❤️ Aşk & İlişkiler\nDuygusal yakınlık bugün ön planda. Sevdiklerinize ne hissettiklerini sormayı unutmayın.\n\n💼 Kariyer & Para\nEkip çalışmasında öne çıkan bir gün. Liderlik nitelikleriniz fark ediliyor.\n\n🌿 Sağlık & Enerji\nDuygusal dengenizi korumak için kendinize zaman ayırın.\n\n🔮 Günün Mesajı\nKalbin bilgeliği, aklın hesapladığından çok daha derine uzanır.`,
-    `🌟 Genel Enerji\nBugün koruyucu ve şefkatli enerjiniz etrafınızdakilere ışık saçıyor. Kendinize de aynı şefkati göstermeyi unutmayın.\n\n❤️ Aşk & İlişkiler\nSevdiklerinizi koruyan kalkanınız bugün daha da güçlü hissettiriyor.\n\n💼 Kariyer & Para\nSezgisel kararlar bugün sizi doğru yöne götürüyor.\n\n🌿 Sağlık & Enerji\nSuya dokunmak; banyo, yüzme veya deniz kenarında yürüyüş ruhunuzu yenileyecek.\n\n🔮 Günün Mesajı\nEn derin sevgi, önce kendine gösterdiğin sevgiden doğar.`,
+    `🌟 Genel Enerji\nAy'ın çocuğu olarak bugün duygusal derinliğiniz bir güç kaynağına dönüşüyor. Sezgilerinize güvenin.\n\n❤️ Aşk & İlişkiler\nDuygusal yakınlık bugün ön planda.\n\n💼 Kariyer & Para\nEkip çalışmasında öne çıkan bir gün.\n\n🌿 Sağlık & Enerji\nDuygusal dengenizi korumak için kendinize zaman ayırın.\n\n🔮 Günün Mesajı\nKalbin bilgeliği, aklın hesapladığından çok daha derine uzanır.`,
+    `🌟 Genel Enerji\nBugün koruyucu ve şefkatli enerjiniz etrafınızdakilere ışık saçıyor.\n\n❤️ Aşk & İlişkiler\nSevdiklerinizi koruyan kalkanınız bugün daha da güçlü hissettiriyor.\n\n💼 Kariyer & Para\nSezgisel kararlar bugün sizi doğru yöne götürüyor.\n\n🌿 Sağlık & Enerji\nSuya dokunmak ruhunuzu yenileyecek.\n\n🔮 Günün Mesajı\nEn derin sevgi, önce kendine gösterdiğin sevgiden doğar.`,
   ],
   "Aslan": [
-    `🌟 Genel Enerji\nGüneş'in çocuğu bugün sahnede! Karizmanız ve özgüveniniz çevrenizdekileri büyülüyor. Yaratıcılığınızı ifade etmek için mükemmel bir gün; ışığınızı saklama.\n\n❤️ Aşk & İlişkiler\nRomantik enerji yüksek; partneriyle kaliteli zaman geçirmek için ideal bir gün.\n\n💼 Kariyer & Para\nLiderlik yetenekleriniz ön plana çıkıyor. Büyük kararlar vermek için cesur olun.\n\n🌿 Sağlık & Enerji\nEnerji bolluğunuzu yaratıcı bir hobiye kanalize edin.\n\n🔮 Günün Mesajı\nAsıl güç, parlamaktan değil; başkalarını da parlatmaktan gelir.`,
-    `🌟 Genel Enerji\nBugün içinizdeki kral ya da kraliçe uyandı. Kendinize inanın ve bunu dünyaya gösterin.\n\n❤️ Aşk & İlişkiler\nCömertliğiniz ilişkinize renk katıyor. Sürprizler yapma vakti!\n\n💼 Kariyer & Para\nFikirleriniz bugün altın değerinde; paylaşmaktan çekinmeyin.\n\n🌿 Sağlık & Enerji\nGüneş ışığı altında zaman geçirmek size enerji verecek.\n\n🔮 Günün Mesajı\nIşığını gizleme; dünya seni görmek istiyor.`,
+    `🌟 Genel Enerji\nGüneş'in çocuğu bugün sahnede! Karizmanız ve özgüveniniz çevrenizdekileri büyülüyor.\n\n❤️ Aşk & İlişkiler\nRomantik enerji yüksek; partneriyle kaliteli zaman geçirmek için ideal bir gün.\n\n💼 Kariyer & Para\nLiderlik yetenekleriniz ön plana çıkıyor.\n\n🌿 Sağlık & Enerji\nEnerji bolluğunuzu yaratıcı bir hobiye kanalize edin.\n\n🔮 Günün Mesajı\nAsıl güç, parlamaktan değil; başkalarını da parlatmaktan gelir.`,
+    `🌟 Genel Enerji\nBugün içinizdeki kral ya da kraliçe uyandı. Kendinize inanın.\n\n❤️ Aşk & İlişkiler\nCömertliğiniz ilişkinize renk katıyor.\n\n💼 Kariyer & Para\nFikirleriniz bugün altın değerinde.\n\n🌿 Sağlık & Enerji\nGüneş ışığı altında zaman geçirmek size enerji verecek.\n\n🔮 Günün Mesajı\nIşığını gizleme; dünya seni görmek istiyor.`,
   ],
   "Başak": [
-    `🌟 Genel Enerji\nMerkür'ün analitik enerjisiyle bugün her detayı görüyor ve anlıyorsunuz. Mükemmeliyetçiliğiniz bugün bir avantaja dönüşüyor; ancak fazla katı olmamaya özen gösterin.\n\n❤️ Aşk & İlişkiler\nKüçük jestler büyük anlam taşıyor. Sevdiğiniz kişiye gösterdiğiniz özen onu derinden etkiliyor.\n\n💼 Kariyer & Para\nDetaylara verdiğiniz önem bir projeyi mükemmel sonuca taşıyor.\n\n🌿 Sağlık & Enerji\nSağlıklı beslenme ve düzenli uyku bugün önceliğiniz olsun.\n\n🔮 Günün Mesajı\nMükemmellik bir hedef değil, her adımda gösterilen özenin doğal sonucudur.`,
-    `🌟 Genel Enerji\nBugün organize ve verimli bir gün sizi bekliyor. Ertelediklerinizi yapma zamanı geldi.\n\n❤️ Aşk & İlişkiler\nPratik sevgi gösterileri; bir hediye, yapılan bir iş, söylenen güzel bir söz ilişkinizi güçlendiriyor.\n\n💼 Kariyer & Para\nSistematik çalışmanız bugün somut sonuçlar doğuruyor.\n\n🌿 Sağlık & Enerji\nZihninizi boşaltmak için günlük tutun veya sessizce oturun.\n\n🔮 Günün Mesajı\nHer büyük şey, küçük ve düzenli adımlarla inşa edilir.`,
+    `🌟 Genel Enerji\nMerkür'ün analitik enerjisiyle bugün her detayı görüyor ve anlıyorsunuz.\n\n❤️ Aşk & İlişkiler\nKüçük jestler büyük anlam taşıyor.\n\n💼 Kariyer & Para\nDetaylara verdiğiniz önem bir projeyi mükemmel sonuca taşıyor.\n\n🌿 Sağlık & Enerji\nSağlıklı beslenme bugün önceliğiniz olsun.\n\n🔮 Günün Mesajı\nMükemmellik, her adımda gösterilen özenin doğal sonucudur.`,
+    `🌟 Genel Enerji\nBugün organize ve verimli bir gün sizi bekliyor.\n\n❤️ Aşk & İlişkiler\nPratik sevgi gösterileri ilişkinizi güçlendiriyor.\n\n💼 Kariyer & Para\nSistematik çalışmanız bugün somut sonuçlar doğuruyor.\n\n🌿 Sağlık & Enerji\nZihninizi boşaltmak için günlük tutun.\n\n🔮 Günün Mesajı\nHer büyük şey, küçük ve düzenli adımlarla inşa edilir.`,
   ],
   "Terazi": [
-    `🌟 Genel Enerji\nVenüs'ün zarafetini taşıyan bugün, denge ve uyumu aramanızı destekliyor. Güzellik her yerde; sadece bakmayı bilmek gerekiyor. Diplomatik yetenekleriniz bugün parılıyor.\n\n❤️ Aşk & İlişkiler\nRomantik atmosfer bugün doruğa ulaşıyor. Sevdiklerinizle güzel anlar yaratın.\n\n💼 Kariyer & Para\nMüzakere ve uzlaşma gerektiren konularda başarılı olacaksınız.\n\n🌿 Sağlık & Enerji\nZihin-beden dengesini kurmak için yoga veya meditasyon deneyin.\n\n🔮 Günün Mesajı\nHer şeyin bir dengesi vardır; o dengeyi bulmak senin sanatındır.`,
-    `🌟 Genel Enerji\nBugün adalet ve dürüstlük ön planda. Doğru olduğuna inandığın için mücadele etmekten çekinme.\n\n❤️ Aşk & İlişkiler\nİlişkinizdeki dengesizlikleri bugün nazikçe ele alın.\n\n💼 Kariyer & Para\nEkip içindeki uyumu sağlama konusunda kilit rol oynuyorsunuz.\n\n🌿 Sağlık & Enerji\nGüzel müzik dinlemek ruhunuzu besleyecek.\n\n🔮 Günün Mesajı\nDenge, durağanlık değil; sürekli bir uyum dansıdır.`,
+    `🌟 Genel Enerji\nVenüs'ün zarafetini taşıyan bugün, denge ve uyumu aramanızı destekliyor.\n\n❤️ Aşk & İlişkiler\nRomantik atmosfer bugün doruğa ulaşıyor.\n\n💼 Kariyer & Para\nMüzakere gerektiren konularda başarılı olacaksınız.\n\n🌿 Sağlık & Enerji\nYoga veya meditasyon deneyin.\n\n🔮 Günün Mesajı\nHer şeyin bir dengesi vardır; o dengeyi bulmak senin sanatındır.`,
+    `🌟 Genel Enerji\nBugün adalet ve dürüstlük ön planda.\n\n❤️ Aşk & İlişkiler\nİlişkinizdeki dengesizlikleri bugün nazikçe ele alın.\n\n💼 Kariyer & Para\nEkip içindeki uyumu sağlama konusunda kilit rol oynuyorsunuz.\n\n🌿 Sağlık & Enerji\nGüzel müzik dinlemek ruhunuzu besleyecek.\n\n🔮 Günün Mesajı\nDenge, durağanlık değil; sürekli bir uyum dansıdır.`,
   ],
   "Akrep": [
-    `🌟 Genel Enerji\nPlüton'un derin enerjisiyle bugün yüzeyin altındaki gerçekleri görüyorsunuz. Dönüşüm zamanı; geçmişin ağır yüklerini bırakmak için mükemmel bir an. İçgüdüleriniz size rehberlik ediyor.\n\n❤️ Aşk & İlişkiler\nDerin ve yoğun duygular bugün yüzeye çıkıyor. Kırılganlığınızı göstermekten korkmayın.\n\n💼 Kariyer & Para\nAraştırma ve analiz gerektiren işlerde bugün zirvedesiniz.\n\n🌿 Sağlık & Enerji\nDuygusal detoks için bir şeyleri yazmak veya sanatla ifade etmek faydalı olacak.\n\n🔮 Günün Mesajı\nKaranlık, ışığın ne kadar güçlü olduğunu anlamak için vardır.`,
-    `🌟 Genel Enerji\nBugün dönüşüm enerjisi güçlü. Neyi bırakacağınızı ve neyi tutacağınızı bilmek size güç veriyor.\n\n❤️ Aşk & İlişkiler\nGüven, ilişkinizin temeli. Bugün bu temeli pekiştirin.\n\n💼 Kariyer & Para\nStratejik düşünceniz sizi rakiplerinizin önüne geçiriyor.\n\n🌿 Sağlık & Enerji\nDerin nefes egzersizleri içinizdeki gerilimi serbest bırakacak.\n\n🔮 Günün Mesajı\nEn büyük güç, kendini yeniden icat etme cesaretinden gelir.`,
+    `🌟 Genel Enerji\nPlüton'un derin enerjisiyle bugün yüzeyin altındaki gerçekleri görüyorsunuz.\n\n❤️ Aşk & İlişkiler\nDerin ve yoğun duygular bugün yüzeye çıkıyor.\n\n💼 Kariyer & Para\nAraştırma gerektiren işlerde bugün zirvedesiniz.\n\n🌿 Sağlık & Enerji\nDuygusal detoks için bir şeyleri yazmak faydalı olacak.\n\n🔮 Günün Mesajı\nKaranlık, ışığın ne kadar güçlü olduğunu anlamak için vardır.`,
+    `🌟 Genel Enerji\nBugün dönüşüm enerjisi güçlü.\n\n❤️ Aşk & İlişkiler\nGüven, ilişkinizin temeli. Bugün bu temeli pekiştirin.\n\n💼 Kariyer & Para\nStratejik düşünceniz sizi öne geçiriyor.\n\n🌿 Sağlık & Enerji\nDerin nefes egzersizleri içinizdeki gerilimi serbest bırakacak.\n\n🔮 Günün Mesajı\nEn büyük güç, kendini yeniden icat etme cesaretinden gelir.`,
   ],
   "Yay": [
-    `🌟 Genel Enerji\nJüpiter'in bolluğuyla bugün ufuklar genişliyor. Özgürlük ve macera ruhunuz canlanıyor; yeni deneyimlere açık olun. İyimserliğiniz etrafınızdakilere de yayılıyor.\n\n❤️ Aşk & İlişkiler\nEğlenceli ve macera dolu anlar ilişkinize taze bir hava katıyor.\n\n💼 Kariyer & Para\nUzak mesafeli iletişim ve uluslararası bağlantılar bugün şanslı.\n\n🌿 Sağlık & Enerji\nAçık havada spor veya yürüyüş ruhunuzu özgürleştirecek.\n\n🔮 Günün Mesajı\nOkun hedefe ulaşması için önce geriye çekilmesi gerekir; hazırlan ve fırlat.`,
-    `🌟 Genel Enerji\nBugün felsefi bir ruh halindesiniz. Hayatın anlamını sorgularken yeni cevaplar buluyorsunuz.\n\n❤️ Aşk & İlişkiler\nOrtak hayaller ve planlar ilişkinizi derinleştiriyor.\n\n💼 Kariyer & Para\nYeni öğrenme fırsatları kapıda; değerlendirin.\n\n🌿 Sağlık & Enerji\nBir günlük kaçamak veya küçük bir gezi size iyi gelecek.\n\n🔮 Günün Mesajı\nHer yolculuk, içinde başlar.`,
+    `🌟 Genel Enerji\nJüpiter'in bolluğuyla bugün ufuklar genişliyor. Özgürlük ruhunuz canlanıyor.\n\n❤️ Aşk & İlişkiler\nEğlenceli ve macera dolu anlar ilişkinize taze hava katıyor.\n\n💼 Kariyer & Para\nUzak mesafeli bağlantılar bugün şanslı.\n\n🌿 Sağlık & Enerji\nAçık havada spor ruhunuzu özgürleştirecek.\n\n🔮 Günün Mesajı\nOkun hedefe ulaşması için önce geriye çekilmesi gerekir.`,
+    `🌟 Genel Enerji\nBugün felsefi bir ruh halindesiniz.\n\n❤️ Aşk & İlişkiler\nOrtak hayaller ilişkinizi derinleştiriyor.\n\n💼 Kariyer & Para\nYeni öğrenme fırsatları kapıda.\n\n🌿 Sağlık & Enerji\nKüçük bir kaçamak size iyi gelecek.\n\n🔮 Günün Mesajı\nHer yolculuk, içinde başlar.`,
   ],
   "Oğlak": [
-    `🌟 Genel Enerji\nSatürn'ün disipliниyle bugün kararlılığınız ve azminiz dorukta. Uzun vadeli hedeflerinize doğru attığınız her adım sizi güçlendiriyor. Sabır ve çalışkanlık bugün meyve veriyor.\n\n❤️ Aşk & İlişkiler\nGüvenilirliğiniz ve sadakatiniz sevdikleriniz için en değerli hediyes. Bunu ifade edin.\n\n💼 Kariyer & Para\nMali planlamanız ve uzun vadeli vizyonunuz bugün size avantaj sağlıyor.\n\n🌿 Sağlık & Enerji\nDüzenli uyku ve rutinler bugün sizi besliyor.\n\n🔮 Günün Mesajı\nDağın zirvesi, her adımı sayan ayaklara aittir.`,
-    `🌟 Genel Enerji\nBugün hedeflerinize olan bağlılığınız ilham verici. Zorluklara rağmen devam eden siz, başarıyı hak ediyorsunuz.\n\n❤️ Aşk & İlişkiler\nKalıcı ve güçlü ilişkiler inşa etme yeteneğiniz bugün parlıyor.\n\n💼 Kariyer & Para\nEmeklerinizin karşılığı alınıyor; sabırlı olmaya devam edin.\n\n🌿 Sağlık & Enerji\nKendinize karşı nazik olun; başarı mükemmellikten değil, süreklilikten gelir.\n\n🔮 Günün Mesajı\nYavaş ilerlemek, durmuş olmak değildir.`,
+    `🌟 Genel Enerji\nSatürn'ün disipliniyle bugün kararlılığınız dorukta.\n\n❤️ Aşk & İlişkiler\nGüvenilirliğiniz sevdikleriniz için en değerli hediye.\n\n💼 Kariyer & Para\nUzun vadeli vizyonunuz bugün size avantaj sağlıyor.\n\n🌿 Sağlık & Enerji\nDüzenli uyku bugün sizi besliyor.\n\n🔮 Günün Mesajı\nDağın zirvesi, her adımı sayan ayaklara aittir.`,
+    `🌟 Genel Enerji\nBugün hedeflerinize olan bağlılığınız ilham verici.\n\n❤️ Aşk & İlişkiler\nKalıcı ilişkiler inşa etme yeteneğiniz bugün parlıyor.\n\n💼 Kariyer & Para\nEmeklerinizin karşılığı alınıyor.\n\n🌿 Sağlık & Enerji\nKendinize karşı nazik olun.\n\n🔮 Günün Mesajı\nYavaş ilerlemek, durmuş olmak değildir.`,
   ],
   "Kova": [
-    `🌟 Genel Enerji\nÜranüs'ün yenilikçi enerjisiyle bugün alışılmışın dışında düşünüyorsunuz. Orijinalliğiniz ve bağımsız ruhunuz sizi öne çıkarıyor. Dünyayı değiştirme hayaliniz bugün bir adım daha yakın.\n\n❤️ Aşk & İlişkiler\nOrijinal ve beklenmedik jestler ilişkinize heyecan katıyor.\n\n💼 Kariyer & Para\nYenilikçi fikirleriniz bugün büyük yankı uyandırıyor.\n\n🌿 Sağlık & Enerji\nTopluluk aktiviteleri ve sosyal bağlar size enerji veriyor.\n\n🔮 Günün Mesajı\nGelecek, onu hayal edenler tarafından inşa edilir.`,
-    `🌟 Genel Enerji\nBugün insanlığa hizmet etme arzunuz güçleniyor. Başkalarına katkıda bulunmak içinizi dolduruyor.\n\n❤️ Aşk & İlişkiler\nFikir alışverişi ve entelektüel bağ ilişkinizi besliyor.\n\n💼 Kariyer & Para\nTeknoloji ve yenilik odaklı projeler bugün şanslı.\n\n🌿 Sağlık & Enerji\nAlışılmadık bir aktivite deneyin; yeni şeyler sizi canlandırır.\n\n🔮 Günün Mesajı\nFarklı olmak, öncü olmaktır.`,
+    `🌟 Genel Enerji\nÜranüs'ün yenilikçi enerjisiyle alışılmışın dışında düşünüyorsunuz.\n\n❤️ Aşk & İlişkiler\nOrijinal jestler ilişkinize heyecan katıyor.\n\n💼 Kariyer & Para\nYenilikçi fikirleriniz büyük yankı uyandırıyor.\n\n🌿 Sağlık & Enerji\nTopluluk aktiviteleri size enerji veriyor.\n\n🔮 Günün Mesajı\nGelecek, onu hayal edenler tarafından inşa edilir.`,
+    `🌟 Genel Enerji\nBugün insanlığa hizmet etme arzunuz güçleniyor.\n\n❤️ Aşk & İlişkiler\nFikir alışverişi ilişkinizi besliyor.\n\n💼 Kariyer & Para\nTeknoloji odaklı projeler bugün şanslı.\n\n🌿 Sağlık & Enerji\nAlışılmadık bir aktivite deneyin.\n\n🔮 Günün Mesajı\nFarklı olmak, öncü olmaktır.`,
   ],
   "Balık": [
-    `🌟 Genel Enerji\nNeptün'ün mistik enerjisiyle bugün sezgileriniz ve yaratıcılığınız zirveye çıkıyor. Hayal gücünüz sınırları aşıyor; bu gücü sanatsal ifadeye dönüştürün. Empati yeteneğiniz bugün bir armağan.\n\n❤️ Aşk & İlişkiler\nRomantik ve idealist bir enerji var; aşkı her haliyle kucaklayın.\n\n💼 Kariyer & Para\nSanatsal ve yaratıcı projeler bugün size ilham veriyor.\n\n🌿 Sağlık & Enerji\nMeditasyon veya müzik ruhunuzu derinlemesine besleyecek.\n\n🔮 Günün Mesajı\nHayaller; gerçeğin henüz tamamlanmamış taslağıdır.`,
-    `🌟 Genel Enerji\nBugün sezgisel bilginiz çok güçlü. Mantığın ötesinde bir rehberliğe sahipsiniz; ona güvenin.\n\n❤️ Aşk & İlişkiler\nDerin empati yeteneğiniz ilişkinizi benzersiz kılıyor.\n\n💼 Kariyer & Para\nYardım meslekleri ve sanatsal alanlarda bugün başarı sizi bekliyor.\n\n🌿 Sağlık & Enerji\nSuya yakın olmak; deniz, göl veya banyo sizi yenileyecek.\n\n🔮 Günün Mesajı\nEn güçlü akıntı, sessizce akan sudur.`,
+    `🌟 Genel Enerji\nNeptün'ün mistik enerjisiyle sezgileriniz zirveye çıkıyor.\n\n❤️ Aşk & İlişkiler\nRomantik ve idealist bir enerji var; aşkı kucaklayın.\n\n💼 Kariyer & Para\nSanatsal projeler bugün ilham veriyor.\n\n🌿 Sağlık & Enerji\nMeditasyon ruhunuzu besleyecek.\n\n🔮 Günün Mesajı\nHayaller; gerçeğin henüz tamamlanmamış taslağıdır.`,
+    `🌟 Genel Enerji\nBugün sezgisel bilginiz çok güçlü.\n\n❤️ Aşk & İlişkiler\nDerin empati yeteneğiniz ilişkinizi benzersiz kılıyor.\n\n💼 Kariyer & Para\nYardım mesleklerinde bugün başarı sizi bekliyor.\n\n🌿 Sağlık & Enerji\nSuya yakın olmak sizi yenileyecek.\n\n🔮 Günün Mesajı\nEn güçlü akıntı, sessizce akan sudur.`,
   ],
 };
 
 const WEEKLY = {
-  "Koç": `Pazartesi: Yeni haftaya güçlü bir enerjiyle başlıyorsunuz.\nSalı: İş konularında önemli gelişmeler kapıda.\nÇarşamba: Sosyal bağlantılar size fırsatlar sunuyor.\nPerşembe: Mali konularda dikkatli kararlar alın.\nCuma: Romantik enerji yükseliyor, sevdiklerinize zaman ayırın.\nCumartesi: Dinlenme ve yeniden şarj olma günü.\nPazar: Haftayı değerlendirin ve önümüzdeki hafta için plan yapın.\n\nHaftalık Özet: Bu hafta Koç burcu için harekete geçme ve sonuç alma enerjisi hakim. Mars'ın etkisiyle girişimleriniz güçlü bir ivme kazanıyor. İlişkilerinizde açık iletişim kurun; söylenmeyenler birikmeden önce konuşun. Finansal konularda aceleci davranmaktan kaçının.`,
-  "Boğa": `Pazartesi: Haftaya sakin ve kararlı bir başlangıç yapıyorsunuz.\nSalı: Maddi konularda olumlu gelişmeler bekleniyor.\nÇarşamba: Sevdiklerinizle kaliteli zaman geçirin.\nPerşembe: İş hayatında emekleriniz karşılık buluyor.\nCuma: Venüs'ün etkisiyle romantizm ön planda.\nCumartesi: Doğayla buluşun, ruhunuzu besleyin.\nPazar: Gelecek planları yapmak için ideal bir gün.\n\nHaftalık Özet: Boğa için bu hafta sabır ve kararlılığın ödüllendirildiği bir dönem. Venüs'ün etkisiyle hem aşk hem de estetik konularda güzel gelişmeler yaşanabilir. Maddi konularda tutumlu ama akıllıca adımlar atın. Kendinize iyi bakın; sağlıklı beslenme bu hafta özellikle önemli.`,
-  "İkizler": `Pazartesi: Zihinsel enerji zirveye çıkıyor, yeni fikirler geliyor.\nSalı: İletişim konularında başarılı bir gün.\nÇarşamba: Sosyal çevreniz genişliyor.\nPerşembe: Öğrenme ve keşif için mükemmel bir gün.\nCuma: Eğlenceli planlar günde için enerji katıyor.\nCumartesi: Yazma, okuma veya yaratıcı aktiviteler için ideal.\nPazar: Dinlenerek zihin gücünüzü yenileyin.\n\nHaftalık Özet: İkizler için bu hafta iletişim ve öğrenmenin ön planda olduğu hareketli bir dönem. Merkür'ün etkisiyle yeni bilgiler edinmek ve insanlarla bağlantı kurmak kolay. Çok fazla işi aynı anda yapmaya çalışmaktan kaçının; odaklanmak bu hafta anahtarınız.`,
-  "Yengeç": `Pazartesi: Duygusal sezgileriniz bugün rehberiniz.\nSalı: Aile ve ev konularında güzel gelişmeler.\nÇarşamba: İş hayatında yaratıcılığınızı kullanın.\nPerşembe: Sezgilerinize güvenerek önemli kararlar alın.\nCuma: Sevdiklerinizle sıcak anlar yaşıyorsunuz.\nCumartesi: Kendinize şefkat gösterin ve dinlenin.\nPazar: Ruhsal yenilenme için sessizlik zamanı.\n\nHaftalık Özet: Yengeç için bu hafta duygusal derinlik ve aile bağlarının güçlendiği bir dönem. Ay'ın etkisiyle sezgileriniz keskin; bu içsel rehbere güvenin. Kendinizi fazla zorlamayın ve duygusal sınırlarınızı koruyun. Sevdiklerinize verdiğiniz kadar kendinize de özen gösterin.`,
-  "Aslan": `Pazartesi: Haftaya karizmatik bir girişle başlıyorsunuz.\nSalı: Yaratıcı projeler ilerleme kaydediyor.\nÇarşamba: Liderlik yetenekleriniz öne çıkıyor.\nPerşembe: Sosyal hayatınız renkleniyor.\nCuma: Romantik sürprizler günü aydınlatıyor.\nCumartesi: Sevdiklerinizle eğlenceli vakit geçirin.\nPazar: Dinlenerek gelen haftaya güçlü hazırlanın.\n\nHaftalık Özet: Aslan için bu hafta parlamanın ve takdir görmenin zamanı. Güneş'in enerjisiyle özgüveniniz zirveye çıkıyor. Yaratıcı projelerinize yatırım yapın; sonuçlar sizi şaşırtacak. İlişkilerinizde cömert ve sıcakkanlı olun; bu hafta verdiğiniz güzel geri dönüyor.`,
-  "Başak": `Pazartesi: Organize bir başlangıçla verimli bir hafta açılıyor.\nSalı: Detaylara verdiğiniz önem takdir görüyor.\nÇarşamba: Sağlık ve rutinler üzerine odaklanın.\nPerşembe: İş projeleri somut ilerleme kaydediyor.\nCuma: Mükemmeliyetçiliği bir kenara bırakıp eğlenin.\nCumartesi: Kendinize iyi bakın, küçük keyifler önemli.\nPazar: Gelecek haftanın planlarını yapın.\n\nHaftalık Özet: Başak için bu hafta verimlilik ve düzenin ön planda olduğu bir dönem. Merkür'ün etkisiyle analitik yetenekleriniz keskin; bunu iş ve kişisel gelişimde kullanın. Mükemmeliyetçiliğiniz bazen sizi bunaltabilir; bu hafta "yeterince iyi" kavramını benimseyin.`,
-  "Terazi": `Pazartesi: Denge ve uyum arayışıyla başlıyorsunuz haftaya.\nSalı: İlişkilerde güzel gelişmeler yaşanıyor.\nÇarşamba: Sanatsal aktiviteler size ilham veriyor.\nPerşembe: Önemli kararlar için doğru zaman.\nCuma: Sosyal hayatınız canlılık kazanıyor.\nCumartesi: Güzellik ve estetik konularda kendinize yatırım yapın.\nPazar: Dinlenerek iç dengenizi yenileyin.\n\nHaftalık Özet: Terazi için bu hafta ilişkiler ve denge konularının öne çıktığı güzel bir dönem. Venüs'ün rehberliğinde hem aşk hem de sanatsal ifade konularında fırsatlar doğuyor. Karar vermekte zorlandığınız konularda artık harekete geçme zamanı; kararsızlık sizi geri tutuyor.`,
-  "Akrep": `Pazartesi: Derin sezgileriniz bu hafta güçlü bir şekilde çalışıyor.\nSalı: Gizli konular gün yüzüne çıkıyor.\nÇarşamba: Dönüşüm için güçlü bir gün.\nPerşembe: Finansal konularda stratejik adımlar atın.\nCuma: Duygusal bağlarınız güçleniyor.\nCumartesi: Kendinizi yenileme ve dönüşüm için zaman ayırın.\nPazar: Derin iç görüşler için meditasyon yapın.\n\nHaftalık Özet: Akrep için bu hafta derinlik ve dönüşümün zamanı. Plüton'un etkisiyle hayatınızdaki gereksiz şeylerden arınma güçleniyor. İlişkilerinizde dürüstlük ve güven ön planda; yüzeysel bağlantılar yerine derin bağlar kurmaya odaklanın. Mali konularda araştırmacı yaklaşımınız size avantaj sağlıyor.`,
-  "Yay": `Pazartesi: Haftaya iyimser ve heyecanlı bir enerjiyle başlıyorsunuz.\nSalı: Yeni öğrenme fırsatları kapıda.\nÇarşamba: Uzak mesafeli bağlantılar size güzel haberler getiriyor.\nPerşembe: Felsefi düşünceler günü renklendiriyor.\nCuma: Macera ve keşif enerjisi yoğunlaşıyor.\nCumartesi: Seyahat veya yeni deneyimler için ideal.\nPazar: Özgür ruhunuzu besleyin.\n\nHaftalık Özet: Yay için bu hafta genişleme ve keşfin zamanı. Jüpiter'in bereketiyle yeni kapılar açılıyor; bu fırsatları değerlendirin. Eğitim, seyahat ve yabancı kültürlerle ilgili konularda olumlu gelişmeler bekleniyor. İlişkilerinizde özgürlüğe duyduğunuz ihtiyacı partnerinizle dürüstçe paylaşın.`,
-  "Oğlak": `Pazartesi: Kararlı adımlarla haftaya başlıyorsunuz.\nSalı: Uzun vadeli hedefleriniz netlik kazanıyor.\nÇarşamba: İş hayatında önemli ilerleme.\nPerşembe: Mali konularda akıllıca adımlar atın.\nCuma: Çalışmanın yanı sıra keyif de önemli.\nCumartesi: Sevdiklerinizle kaliteli zaman geçirin.\nPazar: Bir sonraki haftanın stratejisini oluşturun.\n\nHaftalık Özet: Oğlak için bu hafta çalışkanlık ve kararlılığın meyve verdiği bir dönem. Satürn'ün etkisiyle sorumluluk almanız ve uzun vadeli planlar yapmanız destekleniyor. Kariyer hedeflerinizde somut adımlar atacaksınız; yılmadan devam edin. Kendinize de zaman ayırmayı unutmayın; dinlenme de başarının parçası.`,
-  "Kova": `Pazartesi: Yenilikçi fikirler haftaya renk katıyor.\nSalı: Sosyal aktivizm ve toplumsal konular ön planda.\nÇarşamba: Teknoloji ve yenilik alanında fırsatlar.\nPerşembe: Arkadaşlık bağları güçleniyor.\nCuma: Orijinal projeler ilgi görüyor.\nCumartesi: Toplulukla vakit geçirmek size enerji veriyor.\nPazar: Gelecek hayalleriniz üzerine düşünün.\n\nHaftalık Özet: Kova için bu hafta yenilik ve toplumsal bağların ön planda olduğu ilham verici bir dönem. Üranüs'ün etkisiyle alışılmışın dışında fikirler ve yaklaşımlar güçleniyor. Arkadaşlık ve grup aktiviteleri bu hafta sizi besliyor. Bireyselliğinizi korurken topluma katkıda bulunma dengenizi iyi kurun.`,
-  "Balık": `Pazartesi: Sezgisel bilginiz haftaya yön veriyor.\nSalı: Yaratıcı ve sanatsal projeler gelişiyor.\nÇarşamba: Ruhsal derinlik günü.\nPerşembe: Yardım etme ve şifa verme enerjisi güçlü.\nCuma: Romantik ve duygusal bağlar derinleşiyor.\nCumartesi: Sanatsal ifade ve meditasyon için ideal.\nPazar: Ruhunuzu sessizlik ve huzurla besleyin.\n\nHaftalık Özet: Balık için bu hafta sezgi ve yaratıcılığın zirveye çıktığı mistik bir dönem. Neptün'ün etkisiyle hayal gücünüz ve empati yeteneğiniz çok güçlü. Sanatsal ve ruhsal aktiviteler bu hafta size özel tatmin getirecek. Sınırlarınızı korumayı öğrenin; her acıyı üstlenemezsini.`,
+  "Koç": `Pazartesi: Yeni haftaya güçlü bir enerjiyle başlıyorsunuz.\nSalı: İş konularında önemli gelişmeler kapıda.\nÇarşamba: Sosyal bağlantılar size fırsatlar sunuyor.\nPerşembe: Mali konularda dikkatli kararlar alın.\nCuma: Romantik enerji yükseliyor.\nCumartesi: Dinlenme ve yeniden şarj olma günü.\nPazar: Önümüzdeki hafta için plan yapın.\n\nHaftalık Özet: Bu hafta Koç burcu için harekete geçme ve sonuç alma enerjisi hakim. Mars'ın etkisiyle girişimleriniz güçlü bir ivme kazanıyor. İlişkilerinizde açık iletişim kurun. Finansal konularda aceleci davranmaktan kaçının.`,
+  "Boğa": `Pazartesi: Haftaya sakin ve kararlı bir başlangıç yapıyorsunuz.\nSalı: Maddi konularda olumlu gelişmeler bekleniyor.\nÇarşamba: Sevdiklerinizle kaliteli zaman geçirin.\nPerşembe: İş hayatında emekleriniz karşılık buluyor.\nCuma: Venüs'ün etkisiyle romantizm ön planda.\nCumartesi: Doğayla buluşun, ruhunuzu besleyin.\nPazar: Gelecek planları yapmak için ideal.\n\nHaftalık Özet: Boğa için bu hafta sabır ve kararlılığın ödüllendirildiği bir dönem. Venüs'ün etkisiyle hem aşk hem de estetik konularda güzel gelişmeler yaşanabilir.`,
+  "İkizler": `Pazartesi: Zihinsel enerji zirveye çıkıyor.\nSalı: İletişim konularında başarılı bir gün.\nÇarşamba: Sosyal çevreniz genişliyor.\nPerşembe: Öğrenme için mükemmel bir gün.\nCuma: Eğlenceli planlar günde enerji katıyor.\nCumartesi: Yaratıcı aktiviteler için ideal.\nPazar: Dinlenerek zihin gücünüzü yenileyin.\n\nHaftalık Özet: İkizler için bu hafta iletişim ve öğrenmenin ön planda olduğu hareketli bir dönem. Merkür'ün etkisiyle yeni bilgiler edinmek kolay.`,
+  "Yengeç": `Pazartesi: Duygusal sezgileriniz bugün rehberiniz.\nSalı: Aile konularında güzel gelişmeler.\nÇarşamba: İş hayatında yaratıcılığınızı kullanın.\nPerşembe: Sezgilerinize güvenerek kararlar alın.\nCuma: Sevdiklerinizle sıcak anlar yaşıyorsunuz.\nCumartesi: Kendinize şefkat gösterin.\nPazar: Ruhsal yenilenme için sessizlik zamanı.\n\nHaftalık Özet: Yengeç için bu hafta duygusal derinlik ve aile bağlarının güçlendiği bir dönem.`,
+  "Aslan": `Pazartesi: Haftaya karizmatik bir girişle başlıyorsunuz.\nSalı: Yaratıcı projeler ilerleme kaydediyor.\nÇarşamba: Liderlik yetenekleriniz öne çıkıyor.\nPerşembe: Sosyal hayatınız renkleniyor.\nCuma: Romantik sürprizler günü aydınlatıyor.\nCumartesi: Sevdiklerinizle eğlenceli vakit geçirin.\nPazar: Dinlenerek gelen haftaya hazırlanın.\n\nHaftalık Özet: Aslan için bu hafta parlamanın ve takdir görmenin zamanı.`,
+  "Başak": `Pazartesi: Organize bir başlangıçla verimli hafta açılıyor.\nSalı: Detaylara verdiğiniz önem takdir görüyor.\nÇarşamba: Sağlık ve rutinler üzerine odaklanın.\nPerşembe: İş projeleri somut ilerleme kaydediyor.\nCuma: Mükemmeliyetçiliği bir kenara bırakıp eğlenin.\nCumartesi: Kendinize iyi bakın.\nPazar: Gelecek haftanın planlarını yapın.\n\nHaftalık Özet: Başak için bu hafta verimlilik ve düzenin ön planda olduğu bir dönem.`,
+  "Terazi": `Pazartesi: Denge ve uyum arayışıyla başlıyorsunuz.\nSalı: İlişkilerde güzel gelişmeler yaşanıyor.\nÇarşamba: Sanatsal aktiviteler ilham veriyor.\nPerşembe: Önemli kararlar için doğru zaman.\nCuma: Sosyal hayatınız canlılık kazanıyor.\nCumartesi: Kendinize yatırım yapın.\nPazar: İç dengenizi yenileyin.\n\nHaftalık Özet: Terazi için bu hafta ilişkiler ve denge konularının öne çıktığı güzel bir dönem.`,
+  "Akrep": `Pazartesi: Derin sezgileriniz bu hafta güçlü.\nSalı: Gizli konular gün yüzüne çıkıyor.\nÇarşamba: Dönüşüm için güçlü bir gün.\nPerşembe: Finansal konularda stratejik adımlar atın.\nCuma: Duygusal bağlarınız güçleniyor.\nCumartesi: Kendinizi yenileme zamanı.\nPazar: Derin iç görüşler için meditasyon yapın.\n\nHaftalık Özet: Akrep için bu hafta derinlik ve dönüşümün zamanı.`,
+  "Yay": `Pazartesi: Haftaya iyimser bir enerjiyle başlıyorsunuz.\nSalı: Yeni öğrenme fırsatları kapıda.\nÇarşamba: Uzak mesafeli bağlantılar güzel haberler getiriyor.\nPerşembe: Felsefi düşünceler günü renklendiriyor.\nCuma: Macera ve keşif enerjisi yoğunlaşıyor.\nCumartesi: Seyahat için ideal.\nPazar: Özgür ruhunuzu besleyin.\n\nHaftalık Özet: Yay için bu hafta genişleme ve keşfin zamanı.`,
+  "Oğlak": `Pazartesi: Kararlı adımlarla haftaya başlıyorsunuz.\nSalı: Uzun vadeli hedefleriniz netlik kazanıyor.\nÇarşamba: İş hayatında önemli ilerleme.\nPerşembe: Mali konularda akıllıca adımlar atın.\nCuma: Keyif de önemli, çalışmanın yanı sıra eğlenin.\nCumartesi: Sevdiklerinizle zaman geçirin.\nPazar: Bir sonraki haftanın stratejisini oluşturun.\n\nHaftalık Özet: Oğlak için bu hafta çalışkanlık ve kararlılığın meyve verdiği bir dönem.`,
+  "Kova": `Pazartesi: Yenilikçi fikirler haftaya renk katıyor.\nSalı: Toplumsal konular ön planda.\nÇarşamba: Teknoloji alanında fırsatlar.\nPerşembe: Arkadaşlık bağları güçleniyor.\nCuma: Orijinal projeler ilgi görüyor.\nCumartesi: Toplulukla vakit size enerji veriyor.\nPazar: Gelecek hayalleriniz üzerine düşünün.\n\nHaftalık Özet: Kova için bu hafta yenilik ve toplumsal bağların ön planda olduğu ilham verici bir dönem.`,
+  "Balık": `Pazartesi: Sezgisel bilginiz haftaya yön veriyor.\nSalı: Yaratıcı projeler gelişiyor.\nÇarşamba: Ruhsal derinlik günü.\nPerşembe: Yardım etme enerjisi güçlü.\nCuma: Romantik bağlar derinleşiyor.\nCumartesi: Sanatsal ifade için ideal.\nPazar: Ruhunuzu sessizlikle besleyin.\n\nHaftalık Özet: Balık için bu hafta sezgi ve yaratıcılığın zirveye çıktığı mistik bir dönem.`,
+};
+
+const DREAM_KEYWORDS = {
+  su: { symbols: ["su", "deniz", "göl", "yağmur", "nehir", "dalga", "sel"], meaning: "Su, duygusal durumunuzu ve bilinçaltınızı temsil eder. Bu rüya, bastırılmış duyguların yüzeye çıkmak istediğine işaret edebilir. Burcunuzun etkisiyle bu duygusal dalgalanma yakında bir netliğe kavuşacak." },
+  uçma: { symbols: ["uçmak", "uçuş", "uçuyordum", "havalanmak", "kanatlar"], meaning: "Uçma rüyaları özgürlük arzusunu ve sınırları aşma isteğini simgeler. Hayatınızda kendinizi kısıtlayan durumlardan kurtulmak istiyorsunuz. Burcunuzun enerjisi size bu özgürlüğü yakında getirecek." },
+  düşme: { symbols: ["düşmek", "düşüyordum", "uçurum", "yüksekten"], meaning: "Düşme rüyaları kontrol kaybı korkusunu veya belirsizlik hissini yansıtır. Ancak endişelenmeyin; bu rüya değişime hazırlanmanızı söylüyor. Burcunuzun gücüyle yeniden ayağa kalkacaksınız." },
+  hayvan: { symbols: ["köpek", "kedi", "at", "kuş", "yılan", "aslan", "kurt"], meaning: "Hayvan rüyaları içgüdüsel dürtüleri ve doğal enerjinizi temsil eder. Gördüğünüz hayvan, şu an hayatınıza getirmeniz gereken bir enerjiyi simgeliyor. Burcunuzla birleşince bu güç katlanıyor." },
+  ev: { symbols: ["ev", "oda", "kapı", "pencere", "salon", "mutfak", "yatak"], meaning: "Ev rüyaları iç dünyanızı ve benliğinizi temsil eder. Her oda farklı bir yönünüzü simgeler. Bu rüya kendinizi daha iyi tanıma zamanının geldiğini müjdeliyor." },
+  ölüm: { symbols: ["ölmek", "öldüm", "cenaze", "mezar", "ölüm"], meaning: "Ölüm rüyaları korkutsa da aslında yeniden doğuşu ve dönüşümü simgeler. Hayatınızda bir şeyin sona erip yeni bir dönemin başlayacağının habercisi. Burcunuzun enerjisiyle bu geçiş güçlü olacak." },
+  default: { meaning: "Bu rüya, bilinçaltınızın size gönderdiği önemli bir mesaj taşıyor. Rüyanızdaki semboller, şu an yaşadığınız dönemi ve iç dünyanızı yansıtıyor. Burcunuzun rehberliğinde bu mesajı doğru yorumlamak ve hayatınıza uygulamak size güç katacak." },
+};
+
+const DREAM_SIGN_SUFFIX = {
+  "Koç": "Mars enerjiniz bu rüyayı harekete geçirdi. Cesur adımlar atmak için hazırsınız.",
+  "Boğa": "Venüs'ün etkisiyle bu rüya size güzellik ve huzur arayışınızı gösteriyor.",
+  "İkizler": "Zihinsel aktiviteniz bu rüyayı şekillendirdi. Merakınızı takip edin.",
+  "Yengeç": "Ay'ın çocuğu olarak duygusal mesajları en güçlü alan sizsiniz.",
+  "Aslan": "Güneş enerjiniz bu rüyayı altın bir ışıkla aydınlatıyor. Parlamaya hazır olun.",
+  "Başak": "Analitik zihniniz bu rüyada bile detayları işliyor. İşaretlere dikkat edin.",
+  "Terazi": "Venüs'ün zarafeti bu rüyaya denge ve uyum mesajı katmış.",
+  "Akrep": "Plüton'un derinliğiyle bu rüya çok katmanlı; yüzeyin altına bakın.",
+  "Yay": "Jüpiter'in bolluğu bu rüyayı umut dolu bir mesajla donattı.",
+  "Oğlak": "Satürn'ün bilgeliği bu rüyada size uzun vadeli bir mesaj gönderiyor.",
+  "Kova": "Üranüs'ün yenilikçi enerjisi bu rüyayı sıradışı kıldı. Farklı düşünün.",
+  "Balık": "Neptün'ün mistik alanında yaşıyorsunuz; rüyalarınız gerçek kehanetler taşıyabilir.",
 };
 
 const COMPAT_TEXT = {
-  "88": "Aynı burcun iki insanı bir araya geldiğinde ortaya çıkan enerji hem büyüleyici hem de zorlayıcı olabilir. Birbirinizi çok iyi anlıyorsunuz çünkü aynı dili konuşuyorsunuz. Güçlü yönleriniz ikiye katlanıyor, ama zayıf yönleriniz de! Birbirinizden öğrenecek çok şeyiniz var.",
-  "95": "Bu iki burç arasındaki uyum yıldızlar tarafından özel olarak yazılmış gibi. Birbirinizi tamamlıyorsunuz; güçlü yönleriniz birleşince olağanüstü bir enerji ortaya çıkıyor. Bu ilişkide hem büyüme hem de derin bir anlayış mevcut. Birlikte her şeyin üstesinden gelebilirsiniz.",
-  "70": "Aranızdaki bağ güçlü ve kalıcı olmaya elverişli. Farklılıklarınız çatışma değil, zenginlik kaynağı olabilir. Birbirinizi anlamak için çaba gösterdiğinizde ortaya çıkan uyum sizi şaşırtacak. İletişime yatırım yapın; bu ilişki değer.",
-  "60": "Her ilişki gibi bu da özveri ve anlayış gerektiriyor. Orta düzeyde uyumunuz var; birbirinizden öğreneceğiniz çok şey var. Sabır ve iletişim ile bu ilişkiyi güçlendirebilirsiniz. Farklılıklarınızı bir engel değil, büyüme fırsatı olarak görün.",
-  "40": "Bu kombinasyon zorlu olabilir, ama imkânsız değil. Birbirinizin dünyasını anlamak için ekstra çaba gerekebilir. Güçlü bir bağ kurmak istiyorsanız karşılıklı saygı ve sabır şart. Zorluğun ötesinde derin bir anlayış sizi bekliyor olabilir.",
+  "95": "Bu iki burç arasındaki uyum yıldızlar tarafından özel olarak yazılmış gibi. Birbirinizi tamamlıyorsunuz; güçlü yönleriniz birleşince olağanüstü bir enerji ortaya çıkıyor.",
+  "70": "Aranızdaki bağ güçlü ve kalıcı olmaya elverişli. Birbirinizi anlamak için çaba gösterdiğinizde ortaya çıkan uyum sizi şaşırtacak.",
+  "60": "Her ilişki gibi bu da özveri ve anlayış gerektiriyor. Sabır ve iletişim ile bu ilişkiyi güçlendirebilirsiniz.",
+  "40": "Bu kombinasyon zorlu olabilir, ama imkânsız değil. Güçlü bir bağ kurmak istiyorsanız karşılıklı saygı ve sabır şart.",
 };
 
-const YESNO_ANSWERS = [
-  { answer: "EVET", isYes: true, text: "Evrenin işaretleri olumlu. Yıldızlar bu yolda sizi destekliyor; cesaretinizi toplayın ve adımı atın. İçinizdeki ses de aynı şeyi söylüyor zaten." },
-  { answer: "EVET", isYes: true, text: "Bu sorunun cevabı evet, ancak zamanlamanıza dikkat edin. Doğru an çok önemli; aceleci davranmayın ama fırsatı da kaçırmayın." },
-  { answer: "HAYIR", isYes: false, text: "Şu an için evren hayır diyor. Bu bir kapının kapanması değil, daha iyi bir şeyin hazırlanması. Sabırla bekleyin; daha güzel bir yol açılacak." },
-  { answer: "HAYIR", isYes: false, text: "Yıldızlar bu konuda temkinli olmanızı söylüyor. Şu an ilerlemek yerine geri çekilip durumu yeniden değerlendirmek daha akıllıca olabilir." },
-  { answer: "EVET", isYes: true, text: "Kalbiniz zaten cevabı biliyor. Evet, devam edin. Bu adım sizi daha güçlü ve özgür kılacak." },
-  { answer: "HAYIR", isYes: false, text: "Evren şu an farklı bir yönü işaret ediyor. Bu cevap hayal kırıklığı yaratsa da, sizi daha uygun bir yola yönlendirmek için geldi." },
-];
-
-const RISING_COMBOS = {
-  default: (birth, rising) => `⭐ Doğum Burcu × Yükselen Etkisi\n${birth} güneş enerjisi ile ${rising} yükselen enerjisi birleşince içinizde hem güçlü bir öz hem de çevreye yansıttığınız farklı bir kişilik ortaya çıkıyor. Bu iki enerji zaman zaman birbiriyle dans eder, zaman zaman gerilim yaratır; ama her ikisi de sizi siz yapan parçalar.\n\n🌅 Dış Dünyaya Yansıman\nİnsanlar sizi ilk gördüklerinde ${rising} burcunun özelliklerini hisseder; belki karizmatik, belki gizemli, belki sakin. Ancak sizi tanıdıkça asıl doğanız olan ${birth} enerjisi ortaya çıkar.\n\n💫 Güçlü Yanların\nBu kombinasyon size hem içsel derinlik hem de sosyal uyum yeteneği kazandırıyor. İnsanları anlama ve onlara uyum sağlama konusunda güçlüsünüz.\n\n🌑 Dikkat Etmen Gerekenler\nZaman zaman dışarıya yansıttığın ile içinde hissettiklerin arasındaki uçurum yorucu olabilir. Otantik olmaya çalış.\n\n🔮 Senin İçin Mesaj\nİki burcun gücünü taşıyorsun; bu bir yük değil, nadir bir armağan.`,
+const SAME_SIGN_COMPAT = {
+  "Koç":     { score: 65, label: "Ateşli Rekabet", emoji: "⚡", color: "#C9A84C", text: "İki Koç bir arada çok enerji ve heyecan yaratır, ama ikisi de lider olmak istediği için çatışmalar kaçınılmaz. Saygı ve uzlaşı olursa bu ilişki güçlü olabilir." },
+  "Boğa":    { score: 78, label: "Güçlü Uyum", emoji: "💚", color: "#2D8B6E", text: "İki Boğa arasındaki uyum oldukça güçlü. Aynı değerlere ve aynı konfor anlayışına sahipsiniz. Tek risk: İkiniz de inatçısınız." },
+  "İkizler": { score: 58, label: "Eğlenceli Kaos", emoji: "🌀", color: "#7B2D8B", text: "İki İkizler bir araya gelince eğlence eksik olmaz ama istikrar zor. Derinleşmek için çaba gerekir." },
+  "Yengeç":  { score: 72, label: "Derin Bağ", emoji: "💙", color: "#2D5F8B", text: "İki Yengeç birbirini derinden anlayabilir. Ancak iki hassas ruh bir arada olunca duygusal yoğunluk bazen boğucu olabilir." },
+  "Aslan":   { score: 52, label: "Dikkat Gerekli", emoji: "👑", color: "#8B5E2D", text: "İki Aslan aynı sahnede parlamak ister. Ego bir kenara bırakılırsa muhteşem bir güç çifti olunabilir." },
+  "Başak":   { score: 80, label: "Mükemmel Düzen", emoji: "✨", color: "#C9956C", text: "İki Başak birlikte son derece uyumlu ve verimli olabilir. Tek risk: İkisi de eleştirici olduğu için küçük şeyler büyüyebilir." },
+  "Terazi":  { score: 70, label: "Zarif Uyum", emoji: "⚖️", color: "#C9A84C", text: "İki Terazi birlikte güzel ve uyumlu bir ilişki kurabilir. Ancak ikisi de karar vermekte zorlandığı için biri öne çıkmalı." },
+  "Akrep":   { score: 48, label: "Yoğun Gerilim", emoji: "🔥", color: "#8B2D2D", text: "İki Akrep bir araya gelince yoğunluk tavan yapar. Güven şarttır, yoksa ciddi çatışmalar yaşanabilir." },
+  "Yay":     { score: 63, label: "Özgür Ruhlar", emoji: "🏹", color: "#7B2D8B", text: "İki Yay birlikte harika maceralar yaşar ve birbirini kısıtlamaz. Bağlılığı derinleştirmek zaman alabilir." },
+  "Oğlak":   { score: 75, label: "Güçlü Temel", emoji: "🏔️", color: "#2D8B6E", text: "İki Oğlak aynı hedeflere sahip. Bu ilişki sağlam temeller üzerine kurulur. His paylaşımına önem verin." },
+  "Kova":    { score: 66, label: "Zihin Ortaklığı", emoji: "🌊", color: "#2D5F8B", text: "İki Kova entelektüel uyum konusunda mükemmel. Derin yakınlık için ekstra çaba gerekebilir." },
+  "Balık":   { score: 60, label: "Rüya Dünyası", emoji: "🔮", color: "#7B2D8B", text: "İki Balık çok romantik bir bağ kurabilir. Pratik yaşam konularında birbirinizi dengeleyin." },
 };
 
 const COMPATIBILITY = {
@@ -124,19 +150,17 @@ const COMPATIBILITY = {
   "Balık": { best: ["Yengeç", "Akrep", "Başak"], ok: ["Oğlak", "Boğa"], hard: ["İkizler", "Yay"] },
 };
 
-const SAME_SIGN_COMPAT = {
-  "Koç":     { score: 65, label: "Ateşli Rekabet", emoji: "⚡", color: "#C9A84C", text: "İki Koç bir arada çok enerji ve heyecan yaratır, ama ikisi de lider olmak istediği için çatışmalar kaçınılmaz. Birbirinizi çok iyi anlıyorsunuz, ancak ego savaşlarına dikkat! Saygı ve uzlaşı olursa bu ilişki güçlü olabilir." },
-  "Boğa":    { score: 78, label: "Güçlü Uyum", emoji: "💚", color: "#2D8B6E", text: "İki Boğa arasındaki uyum oldukça güçlü. Aynı değerlere, aynı konfor anlayışına ve aynı sadakat beklentisine sahipsiniz. Tek risk: İkiniz de inatçısınız, anlaşmazlıklarda kimse geri adım atmak istemeyebilir." },
-  "İkizler": { score: 58, label: "Eğlenceli Kaos", emoji: "🌀", color: "#7B2D8B", text: "İki İkizler bir araya gelince eğlence eksik olmaz ama istikrar zor. İkisi de sürekli değişim ister, bu da ilişkiyi heyecanlı ama karmaşık kılar. Derinleşmek için çaba gerekir." },
-  "Yengeç":  { score: 72, label: "Derin Bağ", emoji: "💙", color: "#2D5F8B", text: "İki Yengeç birbirini derinden anlayabilir çünkü aynı duygusal dili konuşurlar. Ancak iki hassas ruh bir arada olunca duygusal yoğunluk bazen boğucu olabilir. Birbirinize güvenli alan yaratın." },
-  "Aslan":   { score: 52, label: "Dikkat Gerekli", emoji: "👑", color: "#8B5E2D", text: "İki Aslan aynı sahnede parlamak ister. Birbirinize hayranlık duyabilirsiniz ama ikisi de ilgi merkezi olmak istediği için rekabet kaçınılmaz. Ego bir kenara bırakılırsa muhteşem bir güç çifti olunabilir." },
-  "Başak":   { score: 80, label: "Mükemmel Düzen", emoji: "✨", color: "#C9956C", text: "İki Başak birlikte son derece uyumlu ve verimli olabilir. Aynı titizliğe, aynı standartlara sahipsiniz. Tek risk: İkisi de eleştirici olduğu için küçük şeyler büyük sorunlara dönüşebilir." },
-  "Terazi":  { score: 70, label: "Zarif Uyum", emoji: "⚖️", color: "#C9A84C", text: "İki Terazi birlikte güzel ve uyumlu bir ilişki kurabilir. Barışçıl yapınız çatışmaları önler. Ancak ikisi de karar vermekte zorlandığı için önemli konular ertelenebilir; bu ilişkide biri karar almalı." },
-  "Akrep":   { score: 48, label: "Yoğun Gerilim", emoji: "🔥", color: "#8B2D2D", text: "İki Akrep bir araya gelince yoğunluk tavan yapar. Derin bir anlayış ve tutku olabilir ama ikisi de kontrol etmek ve güç sahibi olmak istediği için ciddi çatışmalar yaşanabilir. Güven şarttır." },
-  "Yay":     { score: 63, label: "Özgür Ruhlar", emoji: "🏹", color: "#7B2D8B", text: "İki Yay birlikte harika maceralar yaşar ve birbirini kısıtlamaz. Özgürlük ihtiyacınızı anlayan tek kişi yine kendiniz! Ancak ikisi de bağlılıktan kaçtığı için ilişkiyi derinleştirmek zaman alabilir." },
-  "Oğlak":   { score: 75, label: "Güçlü Temel", emoji: "🏔️", color: "#2D8B6E", text: "İki Oğlak aynı hedeflere, aynı çalışkanlığa ve aynı kararlılığa sahip. Bu ilişki sağlam temeller üzerine kurulur. Dikkat edilmesi gereken tek şey: İkisi de duygularını ifade etmekte zorlanır; his paylaşımına önem verin." },
-  "Kova":    { score: 66, label: "Zihin Ortaklığı", emoji: "🌊", color: "#2D5F8B", text: "İki Kova entelektüel uyum konusunda mükemmel. Fikirleriniz, hayalleriniz örtüşüyor. Ancak ikisi de duygusal mesafe koyma eğiliminde olduğu için derin bir yakınlık kurmak için ekstra çaba gerekebilir." },
-  "Balık":   { score: 60, label: "Rüya Dünyası", emoji: "🔮", color: "#7B2D8B", text: "İki Balık birlikte çok romantik ve ruhsal bir bağ kurabilir. Ancak ikisi de hayalperest olduğu için pratik yaşam konularında zorlanabilirler. Birbirinizi gerçekliğe bağlayacak denge önemli." },
+const YESNO_ANSWERS = [
+  { answer: "EVET", isYes: true, text: "Evrenin işaretleri olumlu. Yıldızlar bu yolda sizi destekliyor; cesaretinizi toplayın ve adımı atın." },
+  { answer: "EVET", isYes: true, text: "Bu sorunun cevabı evet, ancak zamanlamanıza dikkat edin. Doğru an çok önemli." },
+  { answer: "HAYIR", isYes: false, text: "Şu an için evren hayır diyor. Bu bir kapının kapanması değil, daha iyi bir şeyin hazırlanması." },
+  { answer: "HAYIR", isYes: false, text: "Yıldızlar bu konuda temkinli olmanızı söylüyor. Geri çekilip durumu yeniden değerlendirin." },
+  { answer: "EVET", isYes: true, text: "Kalbiniz zaten cevabı biliyor. Evet, devam edin. Bu adım sizi daha güçlü kılacak." },
+  { answer: "HAYIR", isYes: false, text: "Evren şu an farklı bir yönü işaret ediyor. Daha uygun bir yola yönlendirmek için geldi bu cevap." },
+];
+
+const RISING_COMBOS = {
+  default: (birth, rising) => `⭐ Doğum Burcu × Yükselen Etkisi\n${birth} güneş enerjisi ile ${rising} yükselen enerjisi birleşince hem güçlü bir öz hem de çevreye yansıttığınız farklı bir kişilik ortaya çıkıyor.\n\n🌅 Dış Dünyaya Yansıman\nİnsanlar sizi ilk gördüklerinde ${rising} burcunun özelliklerini hisseder. Ancak sizi tanıdıkça asıl doğanız olan ${birth} enerjisi ortaya çıkar.\n\n💫 Güçlü Yanların\nBu kombinasyon hem içsel derinlik hem de sosyal uyum yeteneği kazandırıyor. İnsanları anlama ve uyum sağlama konusunda güçlüsünüz.\n\n🌑 Dikkat Etmen Gerekenler\nDışarıya yansıttığın ile içinde hissettiklerin arasındaki uçurum zaman zaman yorucu olabilir. Otantik olmaya çalış.\n\n🔮 Senin İçin Mesaj\nİki burcun gücünü taşıyorsun; bu bir yük değil, nadir bir armağan.`,
 };
 
 function getCompatibilityScore(s1, s2) {
@@ -150,6 +174,29 @@ function getCompatibilityScore(s1, s2) {
   if (c.ok.includes(s2.name)) return { score: 70, label: "İyi Uyum", emoji: "💛", color: "#C9A84C", key: "70" };
   if (c.hard.includes(s2.name)) return { score: 40, label: "Zorlu İlişki", emoji: "⚡", color: "#8B2D2D", key: "40" };
   return { score: 60, label: "Orta Uyum", emoji: "🤝", color: "#7B2D8B", key: "60" };
+}
+
+function interpretDream(text, sign) {
+  const lowerText = text.toLowerCase();
+  for (const [, data] of Object.entries(DREAM_KEYWORDS)) {
+    if (data.symbols && data.symbols.some(s => lowerText.includes(s))) {
+      return data.meaning + "\n\n✨ " + (DREAM_SIGN_SUFFIX[sign.name] || "");
+    }
+  }
+  return DREAM_KEYWORDS.default.meaning + "\n\n✨ " + (DREAM_SIGN_SUFFIX[sign.name] || "");
+}
+
+function calcGroupScore(signs) {
+  let total = 0;
+  let count = 0;
+  for (let i = 0; i < signs.length; i++) {
+    for (let j = i + 1; j < signs.length; j++) {
+      const r = getCompatibilityScore(signs[i], signs[j]);
+      total += r ? r.score : 60;
+      count++;
+    }
+  }
+  return count > 0 ? Math.round(total / count) : 0;
 }
 
 function Stars({ dark }) {
@@ -191,9 +238,17 @@ export default function App() {
 
   const [risingBirthSign, setRisingBirthSign] = useState(null);
   const [birthHour, setBirthHour] = useState("");
-  const [birthMinute, setBirthMinute] = useState("00");
   const [risingSign, setRisingSign] = useState(null);
   const [risingReading, setRisingReading] = useState("");
+
+  const [dreamText, setDreamText] = useState("");
+  const [dreamSign, setDreamSign] = useState(null);
+  const [dreamResult, setDreamResult] = useState(null);
+
+  const [groupSigns, setGroupSigns] = useState([]);
+  const [groupResult, setGroupResult] = useState(null);
+
+  const [cardSign, setCardSign] = useState(null);
 
   const today = new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
 
@@ -248,12 +303,46 @@ export default function App() {
     setCompat(getCompatibilityScore(sign1, sign2));
   }
 
+  function interpretDreamLocal() {
+    if (!dreamText.trim() || !dreamSign) return;
+    setDreamResult(interpretDream(dreamText, dreamSign));
+  }
+
+  function toggleGroupSign(sign) {
+    setGroupResult(null);
+    setGroupSigns(prev => {
+      if (prev.find(s => s.name === sign.name)) return prev.filter(s => s.name !== sign.name);
+      if (prev.length >= 6) return prev;
+      return [...prev, sign];
+    });
+  }
+
+  function calcGroup() {
+    if (groupSigns.length < 2) return;
+    const score = calcGroupScore(groupSigns);
+    let label, emoji, color;
+    if (score >= 80) { label = "Mükemmel Ekip"; emoji = "🌟"; color = "#C9956C"; }
+    else if (score >= 65) { label = "Uyumlu Grup"; emoji = "💛"; color = "#C9A84C"; }
+    else if (score >= 50) { label = "Dengeli Takım"; emoji = "🤝"; color = "#7B2D8B"; }
+    else { label = "Zorlu Dinamik"; emoji = "⚡"; color = "#8B2D2D"; }
+    setGroupResult({ score, label, emoji, color });
+  }
+
   const tabs = [
     { id: "home", icon: "✦", label: "Burçlar" },
     { id: "compat", icon: "♾", label: "Uyum" },
+    { id: "extras", icon: "✨", label: "Keşfet" },
     { id: "yesno", icon: "🔮", label: "Fal" },
     { id: "rising", icon: "🌅", label: "Yükselen" },
   ];
+
+  const btnStyle = (active) => ({
+    width: "100%", padding: "14px", borderRadius: 14, cursor: "pointer",
+    background: active ? `linear-gradient(135deg, ${th.purple}, #C9956C)` : th.card,
+    border: `1px solid ${active ? "transparent" : th.border}`,
+    color: active ? "white" : th.sub,
+    fontSize: 15, fontFamily: "'Jost', sans-serif", fontWeight: 500, transition: "all 0.3s",
+  });
 
   return (
     <>
@@ -265,17 +354,18 @@ export default function App() {
         @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
         @keyframes scaleIn { from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
         @keyframes glow { 0%,100%{opacity:0.7} 50%{opacity:1} }
+        @keyframes shimmer { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
         .sign-pill:hover { transform: translateY(-2px) scale(1.04); }
         textarea:focus, input:focus { outline: none; }
         input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
-        textarea::placeholder { color: ${th.placeholder}; }
+        textarea::placeholder, input::placeholder { color: ${th.placeholder}; }
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-thumb { background: rgba(201,149,108,0.3); border-radius: 2px; }
       `}</style>
 
       <div style={{ minHeight: "100vh", background: th.bg, color: th.text, fontFamily: "'Jost', sans-serif", position: "relative", transition: "background 0.4s" }}>
         <Stars dark={dark} />
-        <div style={{ maxWidth: 430, margin: "0 auto", minHeight: "100vh", position: "relative", zIndex: 1, paddingBottom: 80 }}>
+        <div style={{ maxWidth: 430, margin: "0 auto", minHeight: "100vh", position: "relative", zIndex: 1, paddingBottom: 90 }}>
 
           {/* Top Bar */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 20px 0" }}>
@@ -396,7 +486,7 @@ export default function App() {
                   <button key={s.name} onClick={() => {
                     if (!sign1) { setSign1(s); setCompat(null); }
                     else if (!sign2) { setSign2(s); setCompat(null); }
-                    else if (sign1 && sign2) { setSign1(s); setSign2(null); setCompat(null); }
+                    else { setSign1(s); setSign2(null); setCompat(null); }
                   }} style={{
                     background: (sign1 === s || sign2 === s) ? `rgba(201,149,108,0.2)` : th.card,
                     border: `1px solid ${(sign1 === s || sign2 === s) ? th.accent : th.border}`,
@@ -409,16 +499,11 @@ export default function App() {
               </div>
 
               {sign1 && sign2 && (
-                <button onClick={checkCompatibility} style={{
-                  width: "100%", padding: "14px", borderRadius: 14, cursor: "pointer",
-                  background: `linear-gradient(135deg, ${th.purple}, #C9956C)`,
-                  border: "none", color: "white", fontSize: 15, fontFamily: "'Jost', sans-serif",
-                  fontWeight: 500, marginBottom: 20,
-                }}>✦ Uyumu Hesapla</button>
+                <button onClick={checkCompatibility} style={btnStyle(true)}>✦ Uyumu Hesapla</button>
               )}
 
               {compat && (
-                <div style={{ animation: "scaleIn 0.4s ease" }}>
+                <div style={{ animation: "scaleIn 0.4s ease", marginTop: 20 }}>
                   <div style={{ background: th.card, border: `1px solid ${compat.color}`, borderRadius: 20, padding: "24px", textAlign: "center", marginBottom: 12 }}>
                     <div style={{ fontSize: 36, marginBottom: 8 }}>{compat.emoji}</div>
                     <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: compat.color, marginBottom: 8 }}>{compat.label}</div>
@@ -437,6 +522,195 @@ export default function App() {
             </div>
           )}
 
+          {/* KEŞFet - Yeni özellikler */}
+          {tab === "extras" && (
+            <div style={{ padding: "24px 16px 0", animation: "fadeUp 0.5s ease" }}>
+              <div style={{ textAlign: "center", marginBottom: 24 }}>
+                <div style={{ fontSize: 40, marginBottom: 8 }}>✨</div>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: th.accent }}>Keşfet</h2>
+              </div>
+
+              {/* Alt sekmeler */}
+              <div style={{ display: "flex", gap: 6, marginBottom: 24 }}>
+                {[
+                  { id: "dream", label: "🌙 Rüya" },
+                  { id: "group", label: "👥 Grup" },
+                  { id: "card", label: "🎴 Kart" },
+                ].map(t => (
+                  <button key={t.id} onClick={() => {
+                    if (tab === "extras") {
+                      document.querySelectorAll("[data-extra-tab]").forEach(el => el.style.display = "none");
+                      document.querySelector(`[data-extra-tab="${t.id}"]`).style.display = "block";
+                    }
+                  }} style={{
+                    flex: 1, padding: "10px 4px", borderRadius: 12, cursor: "pointer",
+                    border: `1px solid ${th.border}`, background: th.card,
+                    color: th.text, fontFamily: "'Jost', sans-serif", fontSize: 12, fontWeight: 500,
+                  }}>{t.label}</button>
+                ))}
+              </div>
+
+              {/* RÜYA YORUMU */}
+              <div>
+                <div style={{ textAlign: "center", marginBottom: 16 }}>
+                  <div style={{ fontSize: 32, marginBottom: 6 }}>🌙</div>
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: th.accent }}>Rüya Yorumu</h3>
+                  <p style={{ fontSize: 12, color: th.sub, marginTop: 4, fontStyle: "italic" }}>Rüyanı anlat, burcunla yorumlayalım</p>
+                </div>
+
+                <p style={{ fontSize: 11, color: th.sub, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>1. Burcunu Seç</p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 6, marginBottom: 16 }}>
+                  {SIGNS.map(s => (
+                    <button key={s.name} onClick={() => { setDreamSign(s); setDreamResult(null); }} style={{
+                      background: dreamSign === s ? `rgba(201,149,108,0.2)` : th.card,
+                      border: `1px solid ${dreamSign === s ? th.accent : th.border}`,
+                      borderRadius: 10, padding: "8px 4px", cursor: "pointer", textAlign: "center", transition: "all 0.2s",
+                    }}>
+                      <div style={{ fontSize: 16 }}>{s.symbol}</div>
+                      <div style={{ fontSize: 8, color: dreamSign === s ? th.accent : th.sub, marginTop: 2, textTransform: "uppercase" }}>{s.name}</div>
+                    </button>
+                  ))}
+                </div>
+
+                <p style={{ fontSize: 11, color: th.sub, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>2. Rüyanı Anlat</p>
+                <textarea
+                  value={dreamText}
+                  onChange={e => { setDreamText(e.target.value); setDreamResult(null); }}
+                  placeholder="Rüyanı kısaca anlat... (örn: Denizde yüzüyordum, uçmaya çalışıyordum...)"
+                  style={{ width: "100%", minHeight: 90, padding: "14px", background: th.inputBg, border: `1px solid ${th.border}`, borderRadius: 14, color: th.text, fontSize: 13, lineHeight: 1.7, fontFamily: "'Jost', sans-serif", resize: "none", marginBottom: 12 }}
+                />
+                <button onClick={interpretDreamLocal} disabled={!dreamText.trim() || !dreamSign} style={btnStyle(dreamText.trim() && dreamSign)}>
+                  🌙 Rüyamı Yorumla
+                </button>
+
+                {dreamResult && (
+                  <div style={{ marginTop: 16, animation: "scaleIn 0.4s ease", background: th.card, border: `1px solid ${th.border}`, borderRadius: 20, padding: "22px 18px" }}>
+                    <div style={{ textAlign: "center", marginBottom: 12 }}>
+                      <span style={{ fontSize: 32 }}>🌙</span>
+                      <h4 style={{ fontFamily: "'Playfair Display', serif", color: th.accent, marginTop: 6 }}>Rüya Yorumun</h4>
+                    </div>
+                    <p style={{ fontSize: 14, lineHeight: 1.9, color: th.text, fontStyle: "italic", whiteSpace: "pre-wrap" }}>{dreamResult}</p>
+                  </div>
+                )}
+
+                {/* GRUP UYUMU */}
+                <div style={{ marginTop: 36, paddingTop: 28, borderTop: `1px solid ${th.border}` }}>
+                  <div style={{ textAlign: "center", marginBottom: 16 }}>
+                    <div style={{ fontSize: 32, marginBottom: 6 }}>👥</div>
+                    <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: th.accent }}>Arkadaş Grubu Uyumu</h3>
+                    <p style={{ fontSize: 12, color: th.sub, marginTop: 4, fontStyle: "italic" }}>2-6 kişi seç, grubunuzun enerjisini gör</p>
+                  </div>
+
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12, minHeight: 44, padding: "8px", background: th.card, borderRadius: 14, border: `1px solid ${th.border}` }}>
+                    {groupSigns.length === 0
+                      ? <p style={{ fontSize: 12, color: th.sub, margin: "auto" }}>Aşağıdan burç seç ↓</p>
+                      : groupSigns.map(s => (
+                        <span key={s.name} onClick={() => toggleGroupSign(s)} style={{
+                          display: "inline-flex", alignItems: "center", gap: 4,
+                          background: `rgba(201,149,108,0.2)`, border: `1px solid ${th.accent}`,
+                          borderRadius: 20, padding: "4px 10px", cursor: "pointer", fontSize: 12, color: th.accent,
+                        }}>{s.symbol} {s.name} ✕</span>
+                      ))
+                    }
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 6, marginBottom: 16 }}>
+                    {SIGNS.map(s => (
+                      <button key={s.name} onClick={() => toggleGroupSign(s)} style={{
+                        background: groupSigns.find(g => g.name === s.name) ? `rgba(201,149,108,0.2)` : th.card,
+                        border: `1px solid ${groupSigns.find(g => g.name === s.name) ? th.accent : th.border}`,
+                        borderRadius: 10, padding: "8px 4px", cursor: "pointer", textAlign: "center", transition: "all 0.2s",
+                      }}>
+                        <div style={{ fontSize: 16 }}>{s.symbol}</div>
+                        <div style={{ fontSize: 8, color: groupSigns.find(g => g.name === s.name) ? th.accent : th.sub, marginTop: 2, textTransform: "uppercase" }}>{s.name}</div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <button onClick={calcGroup} disabled={groupSigns.length < 2} style={btnStyle(groupSigns.length >= 2)}>
+                    👥 Grup Uyumunu Hesapla
+                  </button>
+
+                  {groupResult && (
+                    <div style={{ marginTop: 16, animation: "scaleIn 0.4s ease", background: th.card, border: `1px solid ${groupResult.color}`, borderRadius: 20, padding: "24px", textAlign: "center" }}>
+                      <div style={{ fontSize: 40, marginBottom: 8 }}>{groupResult.emoji}</div>
+                      <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: groupResult.color, marginBottom: 8 }}>{groupResult.label}</div>
+                      <div style={{ display: "flex", justifyContent: "center", gap: 4, marginBottom: 12 }}>
+                        {Array.from({ length: 10 }).map((_, i) => (
+                          <div key={i} style={{ width: 22, height: 6, borderRadius: 3, background: i < Math.round(groupResult.score / 10) ? groupResult.color : `rgba(201,149,108,0.15)` }} />
+                        ))}
+                      </div>
+                      <div style={{ fontSize: 14, color: th.sub, marginBottom: 8 }}>Grup Uyumu: %{groupResult.score}</div>
+                      <div style={{ display: "flex", justifyContent: "center", gap: 6, flexWrap: "wrap" }}>
+                        {groupSigns.map(s => (
+                          <span key={s.name} style={{ fontSize: 22 }}>{s.symbol}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* BURÇ KARTI */}
+                <div style={{ marginTop: 36, paddingTop: 28, borderTop: `1px solid ${th.border}` }}>
+                  <div style={{ textAlign: "center", marginBottom: 16 }}>
+                    <div style={{ fontSize: 32, marginBottom: 6 }}>🎴</div>
+                    <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: th.accent }}>Burç Kartım</h3>
+                    <p style={{ fontSize: 12, color: th.sub, marginTop: 4, fontStyle: "italic" }}>Burcunu seç, kişisel kartını oluştur</p>
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 6, marginBottom: 16 }}>
+                    {SIGNS.map(s => (
+                      <button key={s.name} onClick={() => setCardSign(s)} style={{
+                        background: cardSign === s ? `rgba(201,149,108,0.2)` : th.card,
+                        border: `1px solid ${cardSign === s ? th.accent : th.border}`,
+                        borderRadius: 10, padding: "8px 4px", cursor: "pointer", textAlign: "center", transition: "all 0.2s",
+                      }}>
+                        <div style={{ fontSize: 16 }}>{s.symbol}</div>
+                        <div style={{ fontSize: 8, color: cardSign === s ? th.accent : th.sub, marginTop: 2, textTransform: "uppercase" }}>{s.name}</div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {cardSign && (
+                    <div style={{ animation: "scaleIn 0.4s ease" }}>
+                      {/* Kart */}
+                      <div style={{
+                        background: `linear-gradient(135deg, #0D0918 0%, ${cardSign.color}33 50%, #1a0a2e 100%)`,
+                        border: `2px solid ${cardSign.color}`,
+                        borderRadius: 24, padding: "32px 24px", textAlign: "center",
+                        position: "relative", overflow: "hidden", marginBottom: 12,
+                      }}>
+                        <div style={{ position: "absolute", top: 12, left: 16, fontSize: 10, color: "rgba(255,255,255,0.3)", letterSpacing: "0.3em", textTransform: "uppercase" }}>KUBER BURÇLAR</div>
+                        <div style={{ position: "absolute", top: 12, right: 16, fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{today}</div>
+                        <div style={{ fontSize: 72, margin: "20px 0 12px", filter: `drop-shadow(0 0 20px ${cardSign.color})` }}>{cardSign.symbol}</div>
+                        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, color: "#EDE0D4", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 4 }}>{cardSign.name}</h2>
+                        <p style={{ fontSize: 12, color: "rgba(237,224,212,0.5)", letterSpacing: "0.1em", marginBottom: 16 }}>{cardSign.en.toUpperCase()}</p>
+                        <div style={{ display: "flex", justifyContent: "center", gap: 16, marginBottom: 16 }}>
+                          <div style={{ textAlign: "center" }}>
+                            <div style={{ fontSize: 10, color: "rgba(237,224,212,0.4)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Element</div>
+                            <div style={{ fontSize: 13, color: "#C9956C", marginTop: 2 }}>{cardSign.element}</div>
+                          </div>
+                          <div style={{ width: 1, background: "rgba(255,255,255,0.1)" }} />
+                          <div style={{ textAlign: "center" }}>
+                            <div style={{ fontSize: 10, color: "rgba(237,224,212,0.4)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Taş</div>
+                            <div style={{ fontSize: 13, color: "#C9956C", marginTop: 2 }}>{cardSign.stone}</div>
+                          </div>
+                          <div style={{ width: 1, background: "rgba(255,255,255,0.1)" }} />
+                          <div style={{ textAlign: "center" }}>
+                            <div style={{ fontSize: 10, color: "rgba(237,224,212,0.4)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Tarih</div>
+                            <div style={{ fontSize: 11, color: "#C9956C", marginTop: 2 }}>{cardSign.dates}</div>
+                          </div>
+                        </div>
+                        <div style={{ fontSize: 12, color: "rgba(237,224,212,0.35)", fontStyle: "italic", letterSpacing: "0.05em" }}>✦ Yıldızların Rehberliğinde ✦</div>
+                      </div>
+                      <p style={{ textAlign: "center", fontSize: 12, color: th.sub, fontStyle: "italic" }}>📸 Ekran görüntüsü alarak paylaşabilirsiniz</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* EVET/HAYIR */}
           {tab === "yesno" && (
             <div style={{ padding: "24px 16px 0", animation: "fadeUp 0.5s ease" }}>
@@ -446,13 +720,9 @@ export default function App() {
                 <p style={{ fontSize: 13, color: th.sub, marginTop: 6, fontStyle: "italic" }}>Aklındaki soruyu yaz, mistik cevabı al</p>
               </div>
               <textarea value={yesNoQ} onChange={e => { setYesNoQ(e.target.value); setYesNoResult(null); }} placeholder="Sorunuzu buraya yazın... (örn: Bu işi kabul etmeli miyim?)" style={{ width: "100%", minHeight: 100, padding: "16px", background: th.inputBg, border: `1px solid ${th.border}`, borderRadius: 16, color: th.text, fontSize: 14, lineHeight: 1.7, fontFamily: "'Jost', sans-serif", resize: "none" }} />
-              <button onClick={askYesNo} disabled={!yesNoQ.trim()} style={{
-                width: "100%", padding: "14px", borderRadius: 14, cursor: "pointer",
-                background: yesNoQ.trim() ? `linear-gradient(135deg, ${th.purple}, #C9956C)` : th.card,
-                border: `1px solid ${yesNoQ.trim() ? "transparent" : th.border}`,
-                color: yesNoQ.trim() ? "white" : th.sub,
-                fontSize: 15, fontFamily: "'Jost', sans-serif", fontWeight: 500, marginTop: 12, transition: "all 0.3s",
-              }}>🔮 Cevabı Göster</button>
+              <button onClick={askYesNo} disabled={!yesNoQ.trim()} style={{ ...btnStyle(yesNoQ.trim()), marginTop: 12 }}>
+                🔮 Cevabı Göster
+              </button>
 
               {yesNoResult && (
                 <div style={{ marginTop: 20, animation: "scaleIn 0.5s ease", background: th.card, border: `1px solid ${yesNoResult.isYes ? "#2D8B6E" : "#8B2D2D"}`, borderRadius: 20, padding: "28px 20px", textAlign: "center" }}>
@@ -465,7 +735,7 @@ export default function App() {
             </div>
           )}
 
-          {/* YÜKSELen */}
+          {/* YÜKSELEN */}
           {tab === "rising" && (
             <div style={{ padding: "24px 16px 0", animation: "fadeUp 0.5s ease" }}>
               <div style={{ textAlign: "center", marginBottom: 24 }}>
@@ -488,29 +758,18 @@ export default function App() {
                 ))}
               </div>
 
-              <p style={{ fontSize: 11, color: th.sub, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>2. Doğum Saatini Gir</p>
-              <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 8 }}>
-                {[{ label: "Saat (0-23)", val: birthHour, set: setBirthHour, max: 23, ph: "14" }, { label: "Dakika (0-59)", val: birthMinute, set: setBirthMinute, max: 59, ph: "30" }].map((f, i) => (
-                  <div key={i} style={{ flex: 1 }}>
-                    <p style={{ fontSize: 11, color: th.sub, marginBottom: 6 }}>{f.label}</p>
-                    <input type="number" min="0" max={f.max} placeholder={`ör: ${f.ph}`} value={f.val}
-                      onChange={e => { f.set(e.target.value); setRisingSign(null); setRisingReading(""); }}
-                      style={{ width: "100%", padding: "12px 14px", background: th.inputBg, border: `1px solid ${th.border}`, borderRadius: 12, color: th.text, fontSize: 16, fontFamily: "'Jost', sans-serif", textAlign: "center" }} />
-                  </div>
-                ))}
-              </div>
-              <p style={{ fontSize: 11, color: th.sub, fontStyle: "italic", marginBottom: 20, textAlign: "center" }}>💡 Doğum saatini bilmiyorsan nüfus cüzdanına bakabilirsin</p>
+              <p style={{ fontSize: 11, color: th.sub, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>2. Doğum Saati (0-23)</p>
+              <input type="number" min="0" max="23" placeholder="örn: 14" value={birthHour}
+                onChange={e => { setBirthHour(e.target.value); setRisingSign(null); setRisingReading(""); }}
+                style={{ width: "100%", padding: "12px 14px", background: th.inputBg, border: `1px solid ${th.border}`, borderRadius: 12, color: th.text, fontSize: 16, fontFamily: "'Jost', sans-serif", textAlign: "center", marginBottom: 8 }} />
+              <p style={{ fontSize: 11, color: th.sub, fontStyle: "italic", marginBottom: 20, textAlign: "center" }}>💡 Bilmiyorsan nüfus cüzdanına bakabilirsin</p>
 
-              <button onClick={getRisingReading} disabled={!risingBirthSign || birthHour === ""} style={{
-                width: "100%", padding: "14px", borderRadius: 14, cursor: "pointer",
-                background: risingBirthSign && birthHour !== "" ? `linear-gradient(135deg, #1a0a2e, #C9956C)` : th.card,
-                border: `1px solid ${risingBirthSign && birthHour !== "" ? "transparent" : th.border}`,
-                color: risingBirthSign && birthHour !== "" ? "white" : th.sub,
-                fontSize: 15, fontFamily: "'Jost', sans-serif", fontWeight: 500, marginBottom: 20, transition: "all 0.3s",
-              }}>🌅 Yükseleni Hesapla</button>
+              <button onClick={getRisingReading} disabled={!risingBirthSign || birthHour === ""} style={btnStyle(risingBirthSign && birthHour !== "")}>
+                🌅 Yükseleni Hesapla
+              </button>
 
               {risingSign && risingReading && (
-                <div style={{ animation: "scaleIn 0.5s ease" }}>
+                <div style={{ animation: "scaleIn 0.5s ease", marginTop: 20 }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 16, background: th.card, border: `1px solid ${th.border}`, borderRadius: 20, padding: "20px" }}>
                     <div style={{ textAlign: "center" }}>
                       <div style={{ fontSize: 36 }}>{risingBirthSign.symbol}</div>
@@ -524,7 +783,7 @@ export default function App() {
                       <div style={{ fontSize: 12, color: th.accent, fontFamily: "'Playfair Display', serif", fontWeight: 700, textTransform: "uppercase" }}>{risingSign.name}</div>
                     </div>
                   </div>
-                  <div style={{ background: th.card, border: `1px solid ${th.border}`, borderRadius: 20, padding: "22px 18px", fontSize: 15, lineHeight: 1.9, color: th.text, whiteSpace: "pre-wrap", marginBottom: 16 }}>{risingReading}</div>
+                  <div style={{ background: th.card, border: `1px solid ${th.border}`, borderRadius: 20, padding: "22px 18px", fontSize: 15, lineHeight: 1.9, color: th.text, whiteSpace: "pre-wrap" }}>{risingReading}</div>
                 </div>
               )}
             </div>
@@ -538,9 +797,9 @@ export default function App() {
                 display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
                 opacity: tab === t.id ? 1 : 0.4, transition: "opacity 0.2s",
               }}>
-                <span style={{ fontSize: 20, color: tab === t.id ? th.accent : th.text }}>{t.icon}</span>
-                <span style={{ fontSize: 10, color: tab === t.id ? th.accent : th.sub, letterSpacing: "0.08em", fontWeight: 500 }}>{t.label}</span>
-                {tab === t.id && <div style={{ width: 20, height: 2, background: th.accent, borderRadius: 1 }} />}
+                <span style={{ fontSize: 18, color: tab === t.id ? th.accent : th.text }}>{t.icon}</span>
+                <span style={{ fontSize: 9, color: tab === t.id ? th.accent : th.sub, letterSpacing: "0.06em", fontWeight: 500 }}>{t.label}</span>
+                {tab === t.id && <div style={{ width: 16, height: 2, background: th.accent, borderRadius: 1 }} />}
               </button>
             ))}
           </div>
