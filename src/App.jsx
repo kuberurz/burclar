@@ -124,9 +124,27 @@ const COMPATIBILITY = {
   "Balık": { best: ["Yengeç", "Akrep", "Başak"], ok: ["Oğlak", "Boğa"], hard: ["İkizler", "Yay"] },
 };
 
+const SAME_SIGN_COMPAT = {
+  "Koç":     { score: 65, label: "Ateşli Rekabet", emoji: "⚡", color: "#C9A84C", text: "İki Koç bir arada çok enerji ve heyecan yaratır, ama ikisi de lider olmak istediği için çatışmalar kaçınılmaz. Birbirinizi çok iyi anlıyorsunuz, ancak ego savaşlarına dikkat! Saygı ve uzlaşı olursa bu ilişki güçlü olabilir." },
+  "Boğa":    { score: 78, label: "Güçlü Uyum", emoji: "💚", color: "#2D8B6E", text: "İki Boğa arasındaki uyum oldukça güçlü. Aynı değerlere, aynı konfor anlayışına ve aynı sadakat beklentisine sahipsiniz. Tek risk: İkiniz de inatçısınız, anlaşmazlıklarda kimse geri adım atmak istemeyebilir." },
+  "İkizler": { score: 58, label: "Eğlenceli Kaos", emoji: "🌀", color: "#7B2D8B", text: "İki İkizler bir araya gelince eğlence eksik olmaz ama istikrar zor. İkisi de sürekli değişim ister, bu da ilişkiyi heyecanlı ama karmaşık kılar. Derinleşmek için çaba gerekir." },
+  "Yengeç":  { score: 72, label: "Derin Bağ", emoji: "💙", color: "#2D5F8B", text: "İki Yengeç birbirini derinden anlayabilir çünkü aynı duygusal dili konuşurlar. Ancak iki hassas ruh bir arada olunca duygusal yoğunluk bazen boğucu olabilir. Birbirinize güvenli alan yaratın." },
+  "Aslan":   { score: 52, label: "Dikkat Gerekli", emoji: "👑", color: "#8B5E2D", text: "İki Aslan aynı sahnede parlamak ister. Birbirinize hayranlık duyabilirsiniz ama ikisi de ilgi merkezi olmak istediği için rekabet kaçınılmaz. Ego bir kenara bırakılırsa muhteşem bir güç çifti olunabilir." },
+  "Başak":   { score: 80, label: "Mükemmel Düzen", emoji: "✨", color: "#C9956C", text: "İki Başak birlikte son derece uyumlu ve verimli olabilir. Aynı titizliğe, aynı standartlara sahipsiniz. Tek risk: İkisi de eleştirici olduğu için küçük şeyler büyük sorunlara dönüşebilir." },
+  "Terazi":  { score: 70, label: "Zarif Uyum", emoji: "⚖️", color: "#C9A84C", text: "İki Terazi birlikte güzel ve uyumlu bir ilişki kurabilir. Barışçıl yapınız çatışmaları önler. Ancak ikisi de karar vermekte zorlandığı için önemli konular ertelenebilir; bu ilişkide biri karar almalı." },
+  "Akrep":   { score: 48, label: "Yoğun Gerilim", emoji: "🔥", color: "#8B2D2D", text: "İki Akrep bir araya gelince yoğunluk tavan yapar. Derin bir anlayış ve tutku olabilir ama ikisi de kontrol etmek ve güç sahibi olmak istediği için ciddi çatışmalar yaşanabilir. Güven şarttır." },
+  "Yay":     { score: 63, label: "Özgür Ruhlar", emoji: "🏹", color: "#7B2D8B", text: "İki Yay birlikte harika maceralar yaşar ve birbirini kısıtlamaz. Özgürlük ihtiyacınızı anlayan tek kişi yine kendiniz! Ancak ikisi de bağlılıktan kaçtığı için ilişkiyi derinleştirmek zaman alabilir." },
+  "Oğlak":   { score: 75, label: "Güçlü Temel", emoji: "🏔️", color: "#2D8B6E", text: "İki Oğlak aynı hedeflere, aynı çalışkanlığa ve aynı kararlılığa sahip. Bu ilişki sağlam temeller üzerine kurulur. Dikkat edilmesi gereken tek şey: İkisi de duygularını ifade etmekte zorlanır; his paylaşımına önem verin." },
+  "Kova":    { score: 66, label: "Zihin Ortaklığı", emoji: "🌊", color: "#2D5F8B", text: "İki Kova entelektüel uyum konusunda mükemmel. Fikirleriniz, hayalleriniz örtüşüyor. Ancak ikisi de duygusal mesafe koyma eğiliminde olduğu için derin bir yakınlık kurmak için ekstra çaba gerekebilir." },
+  "Balık":   { score: 60, label: "Rüya Dünyası", emoji: "🔮", color: "#7B2D8B", text: "İki Balık birlikte çok romantik ve ruhsal bir bağ kurabilir. Ancak ikisi de hayalperest olduğu için pratik yaşam konularında zorlanabilirler. Birbirinizi gerçekliğe bağlayacak denge önemli." },
+};
+
 function getCompatibilityScore(s1, s2) {
   if (!s1 || !s2) return null;
-  if (s1.name === s2.name) return { score: 88, label: "İkiz Ruhlar", emoji: "✨", color: "#C9A84C", key: "88" };
+  if (s1.name === s2.name) {
+    const d = SAME_SIGN_COMPAT[s1.name];
+    return { score: d.score, label: d.label, emoji: d.emoji, color: d.color, key: "same", sameText: d.text };
+  }
   const c = COMPATIBILITY[s1.name];
   if (c.best.includes(s2.name)) return { score: 95, label: "Mükemmel Uyum", emoji: "💞", color: "#C9956C", key: "95" };
   if (c.ok.includes(s2.name)) return { score: 70, label: "İyi Uyum", emoji: "💛", color: "#C9A84C", key: "70" };
@@ -412,7 +430,7 @@ export default function App() {
                     <div style={{ fontSize: 13, color: th.sub }}>%{compat.score} Uyum</div>
                   </div>
                   <div style={{ background: th.card, border: `1px solid ${th.border}`, borderRadius: 16, padding: "18px", fontSize: 14, lineHeight: 1.85, color: th.text, fontStyle: "italic" }}>
-                    {COMPAT_TEXT[String(compat.score)] || COMPAT_TEXT["60"]}
+                    {compat.key === "same" ? compat.sameText : (COMPAT_TEXT[String(compat.score)] || COMPAT_TEXT["60"])}
                   </div>
                 </div>
               )}
