@@ -89,6 +89,7 @@ const WEEKLY = {
 };
 
 const COMPAT_TEXT = {
+  "88": "Aynı burcun iki insanı bir araya geldiğinde ortaya çıkan enerji hem büyüleyici hem de zorlayıcı olabilir. Birbirinizi çok iyi anlıyorsunuz çünkü aynı dili konuşuyorsunuz. Güçlü yönleriniz ikiye katlanıyor, ama zayıf yönleriniz de! Birbirinizden öğrenecek çok şeyiniz var.",
   "95": "Bu iki burç arasındaki uyum yıldızlar tarafından özel olarak yazılmış gibi. Birbirinizi tamamlıyorsunuz; güçlü yönleriniz birleşince olağanüstü bir enerji ortaya çıkıyor. Bu ilişkide hem büyüme hem de derin bir anlayış mevcut. Birlikte her şeyin üstesinden gelebilirsiniz.",
   "70": "Aranızdaki bağ güçlü ve kalıcı olmaya elverişli. Farklılıklarınız çatışma değil, zenginlik kaynağı olabilir. Birbirinizi anlamak için çaba gösterdiğinizde ortaya çıkan uyum sizi şaşırtacak. İletişime yatırım yapın; bu ilişki değer.",
   "60": "Her ilişki gibi bu da özveri ve anlayış gerektiriyor. Orta düzeyde uyumunuz var; birbirinizden öğreneceğiniz çok şey var. Sabır ve iletişim ile bu ilişkiyi güçlendirebilirsiniz. Farklılıklarınızı bir engel değil, büyüme fırsatı olarak görün.",
@@ -124,7 +125,8 @@ const COMPATIBILITY = {
 };
 
 function getCompatibilityScore(s1, s2) {
-  if (!s1 || !s2 || s1 === s2) return null;
+  if (!s1 || !s2) return null;
+  if (s1.name === s2.name) return { score: 88, label: "İkiz Ruhlar", emoji: "✨", color: "#C9A84C", key: "88" };
   const c = COMPATIBILITY[s1.name];
   if (c.best.includes(s2.name)) return { score: 95, label: "Mükemmel Uyum", emoji: "💞", color: "#C9956C", key: "95" };
   if (c.ok.includes(s2.name)) return { score: 70, label: "İyi Uyum", emoji: "💛", color: "#C9A84C", key: "70" };
@@ -375,8 +377,8 @@ export default function App() {
                 {SIGNS.map(s => (
                   <button key={s.name} onClick={() => {
                     if (!sign1) { setSign1(s); setCompat(null); }
-                    else if (!sign2 && s !== sign1) { setSign2(s); setCompat(null); }
-                    else { setSign1(s); setSign2(null); setCompat(null); }
+                    else if (!sign2) { setSign2(s); setCompat(null); }
+                    else if (sign1 && sign2) { setSign1(s); setSign2(null); setCompat(null); }
                   }} style={{
                     background: (sign1 === s || sign2 === s) ? `rgba(201,149,108,0.2)` : th.card,
                     border: `1px solid ${(sign1 === s || sign2 === s) ? th.accent : th.border}`,
