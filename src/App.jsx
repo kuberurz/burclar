@@ -271,12 +271,70 @@ export default function App() {
     return { num, color };
   }
 
-  function openSign(sign) {
+  async function getHoroscope(sign) {
     setSelectedSign(sign);
     setView("result");
     setActiveResultTab("daily");
     setLuckData(generateLuck());
-    setDailyIndex(Math.floor(Math.random() * (DAILY[sign.name]?.length || 1)));
+    setDailyIndex(0);
+    
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          messages: [{
+            role: "user",
+            content: `Sen mistik ve bilge bir astroloji uzmanısın. Bugün ${today} için ${sign.name} burcu günlük yorumu yaz. Şu bölümleri içersin:
+
+🌟 Genel Enerji (2-3 cümle)
+❤️ Aşk & İlişkiler (2 cümle)
+💼 Kariyer & Para (2 cümle)
+🌿 Sağlık & Enerji (1-2 cümle)
+🔮 Günün Mesajı (1 güçlü cümle)
+
+Mistik, içten ve ilham verici bir dil kullan. Markdown kullanma.`
+          }]
+        })
+      });
+      const data = await res.json();
+      const text = data.content?.map(i => i.text || "").join("\n") || DAILY[sign.name]?.[0] || "Yorum alınamadı.";
+      DAILY[sign.name] = [text, ...(DAILY[sign.name] || [])];
+      setDailyIndex(0);
+    } catch {
+      setDailyIndex(0);
+    }
+  }
+
+  function openSign(sign) {
+    getHoroscope(sign);
+  }
+
+  async function getWeeklyHoroscope() {
+    if (!selectedSign) return;
+    setActiveResultTab("weekly");
+    
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          messages: [{
+            role: "user",
+            content: `${selectedSign.name} burcu için bu haftanın Türkçe astroloji yorumunu yaz. Pazartesi'den Pazar'a her gün için kısa bir enerji notu (1 cümle) yaz, sonra haftalık genel özet yaz (3-4 cümle). Mistik bir dil kullan. Markdown kullanma.`
+          }]
+        })
+      });
+      const data = await res.json();
+      const text = data.content?.map(i => i.text || "").join("\n") || WEEKLY[selectedSign.name] || "Yorum alınamadı.";
+      WEEKLY[selectedSign.name] = text;
+    } catch {
+      // Hata olursa statik yorum gösterilir
+    }
   }
 
   function calcRisingSign(birthSign, hour) {
@@ -285,27 +343,131 @@ export default function App() {
     return SIGNS[(signIndex + offset) % 12];
   }
 
-  function getRisingReading() {
+  async function getRisingReading() {
     if (!risingBirthSign || birthHour === "") return;
     const rising = calcRisingSign(risingBirthSign, birthHour);
     setRisingSign(rising);
-    setRisingReading(RISING_COMBOS.default(risingBirthSign.name, rising.name));
+    
+    const staticResult = RISING_COMBOS.default(risingBirthSign.name, rising.name);
+    setRisingReading("Hesaplanıyor...");
+    
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 800,
+          messages: [{
+            role: "user",
+            content: `${risingBirthSign.name} doğum burcu ve ${rising.name} yükselen burcu kombinasyonunu Türkçe yorumla. 
+
+Şu başlıklar altında yaz:
+⭐ Doğum × Yükselen Etkisi (2 cümle)
+🌅 Dış Dünyaya Yansıman (2 cümle)
+💫 Güçlü Yanların (2 cümle)
+🌑 Dikkat Etmen Gerekenler (1-2 cümle)
+🔮 Senin İçin Mesaj (1 güçlü cümle)
+
+Mistik ve içten bir dil kullan. Markdown kullanma.`
+          }]
+        })
+      });
+      const data = await res.json();
+      const text = data.content?.map(i => i.text || "").join("\n") || staticResult;
+      setRisingReading(text);
+    } catch {
+      setRisingReading(staticResult);
+    }
   }
 
-  function askYesNo() {
+  async function askYesNo() {
     if (!yesNoQ.trim()) return;
     const r = YESNO_ANSWERS[Math.floor(Math.random() * YESNO_ANSWERS.length)];
     setYesNoResult(r);
+    
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 400,
+          messages: [{
+            role: "user",
+            content: `Bu soruya "EVET" ya da "HAYIR" ile cevap ver ve 2-3 cümleyle mistik bir açıklama yap: "${yesNoQ}"
+
+Sadece EVET veya HAYIR yaz, sonra açıklama ekle. Markdown kullanma.`
+          }]
+        })
+      });
+      const data = await res.json();
+      const text = data.content?.map(i => i.text || "").join("\n");
+      if (text) {
+        const isYes = text.toUpperCase().includes("EVET");
+        const cleanText = text.replace(/^(EVET|HAYIR)\s*:?\s*/i, "").trim();
+        setYesNoResult({ answer: isYes ? "EVET" : "HAYIR", isYes, text: cleanText });
+      }
+    } catch {
+      // Hata olursa statik cevap gösterilir
+    }
   }
 
-  function checkCompatibility() {
+  async function checkCompatibility() {
     if (!sign1 || !sign2) return;
-    setCompat(getCompatibilityScore(sign1, sign2));
+    const result = getCompatibilityScore(sign1, sign2);
+    setCompat(result);
+    
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 600,
+          messages: [{
+            role: "user",
+            content: `${sign1.name} ve ${sign2.name} burcları arasındaki ${sign1.name === sign2.name ? "aynı burç ilişki" : "ilişki"} uyumunu Türkçe anlat. 3-4 cümle, mistik ve samimi bir dil kullan. Güçlü yönleri ve dikkat edilmesi gerekenleri belirt. Markdown kullanma.`
+          }]
+        })
+      });
+      const data = await res.json();
+      const text = data.content?.map(i => i.text || "").join("\n");
+      if (text) {
+        setCompat(prev => ({ ...prev, sameText: text, customText: text }));
+      }
+    } catch {
+      // Hata olursa statik yorum gösterilir
+    }
   }
 
-  function interpretDreamLocal() {
+  async function interpretDreamLocal() {
     if (!dreamText.trim() || !dreamSign) return;
-    setDreamResult(interpretDream(dreamText, dreamSign));
+    
+    const staticResult = interpretDream(dreamText, dreamSign);
+    setDreamResult("Yorumlanıyor...");
+    
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 800,
+          messages: [{
+            role: "user",
+            content: `${dreamSign.name} burcu için bu rüyayı mistik bir dille yorumla: "${dreamText}"
+
+Rüyadaki sembolleri analiz et ve ${dreamSign.name} burcunun enerjisiyle birleştirerek yorum yap. İçten, bilge ve ilham verici bir ton kullan. 4-5 cümle yaz. Markdown kullanma.`
+          }]
+        })
+      });
+      const data = await res.json();
+      const text = data.content?.map(i => i.text || "").join("\n") || staticResult;
+      setDreamResult(text);
+    } catch {
+      setDreamResult(staticResult);
+    }
   }
 
   function toggleGroupSign(sign) {
@@ -432,7 +594,7 @@ export default function App() {
 
                   <div style={{ display: "flex", gap: 8, padding: "0 16px 16px" }}>
                     {[{ id: "daily", label: "Günlük" }, { id: "weekly", label: "Haftalık" }].map(t => (
-                      <button key={t.id} onClick={() => setActiveResultTab(t.id)} style={{
+                      <button key={t.id} onClick={() => { setActiveResultTab(t.id); if (t.id === "weekly") getWeeklyHoroscope(); }} style={{
                         flex: 1, padding: "10px", borderRadius: 12, cursor: "pointer",
                         border: `1px solid ${activeResultTab === t.id ? th.accent : th.border}`,
                         background: activeResultTab === t.id ? `rgba(201,149,108,0.15)` : th.card,
@@ -449,7 +611,14 @@ export default function App() {
                         : (WEEKLY[selectedSign.name] || "Yorum bulunamadı.")}
                     </div>
                     <div style={{ textAlign: "center", marginTop: 16 }}>
-                      <button onClick={() => { setLuckData(generateLuck()); setDailyIndex(prev => (prev + 1) % (DAILY[selectedSign.name]?.length || 1)); }} style={{
+                      <button onClick={() => { 
+                        setLuckData(generateLuck()); 
+                        if (activeResultTab === "daily") {
+                          getHoroscope(selectedSign);
+                        } else {
+                          getWeeklyHoroscope();
+                        }
+                      }} style={{
                         background: "none", border: `1px solid ${th.border}`, borderRadius: 30,
                         padding: "10px 24px", cursor: "pointer", color: th.accent, fontSize: 13,
                         letterSpacing: "0.1em", fontFamily: "'Jost', sans-serif",
@@ -515,7 +684,7 @@ export default function App() {
                     <div style={{ fontSize: 13, color: th.sub }}>%{compat.score} Uyum</div>
                   </div>
                   <div style={{ background: th.card, border: `1px solid ${th.border}`, borderRadius: 16, padding: "18px", fontSize: 14, lineHeight: 1.85, color: th.text, fontStyle: "italic" }}>
-                    {compat.key === "same" ? compat.sameText : (COMPAT_TEXT[String(compat.score)] || COMPAT_TEXT["60"])}
+                    {compat.customText || (compat.key === "same" ? compat.sameText : (COMPAT_TEXT[String(compat.score)] || COMPAT_TEXT["60"]))}
                   </div>
                 </div>
               )}
